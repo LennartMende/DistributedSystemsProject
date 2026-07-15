@@ -28,11 +28,23 @@ def connect(clientCfg: ClientCfg):
     return client
 
 # publishes data on the topic
-def publish(client: mqtt_client.Client, topic, payload):
+def publish(client: mqtt_client.Client, topic):
     msg_count = 1
     while True:
         time.sleep(0.0167)
         msg = f"messages: {msg_count}"
+
+        pos_dummy_dict = {
+            "shoulder_pan": msg_count,
+            "shoulder_lift": msg_count,
+            "elbow_flex": msg_count,
+            "wrist_flex": msg_count,
+            "wrist_roll": msg_count,
+            "gripper": msg_count
+        }
+
+        payload = json.dumps(pos_dummy_dict)
+        
         result = client.publish(topic, payload)
         status = result.rc
         if status == 0:
@@ -40,7 +52,7 @@ def publish(client: mqtt_client.Client, topic, payload):
         else:
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
-        if msg_count > 600:
+        if msg_count > 3000:
             break
 
 # subscribe data on the topic
