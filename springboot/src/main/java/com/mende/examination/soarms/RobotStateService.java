@@ -15,6 +15,8 @@ public class RobotStateService {
     private final List<Double[]> velsHistory = new ArrayList<>();
     private int posCounter = 0;
     private int velsCounter = 0;
+    private int sampleRate = 10; // sample every 10th message
+    private int bufferCapacity = 180; // store up to 180 samples (30 seconds of data at 10Hz)
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final List<String> JOINT_KEYS = List.of(
@@ -39,9 +41,9 @@ public class RobotStateService {
     }
 
     private void extendPosHistory(Double[] pos) {
-        if (posCounter++ % 10 == 0) { // only store every 10th sample to reduce memory usage
+        if (posCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
             posHistory.add(pos);
-            if (posHistory.size() > 1800) { // remove sample if more than 1800 (=30 * 6 for 10th sampled and just latest 30 secs) for perfromance and memory
+            if (posHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
                 posHistory.remove(0);
             }
         }
@@ -58,9 +60,9 @@ public class RobotStateService {
     }
 
     private void extendVelsHistory(Double[] vels) {
-        if (velsCounter++ % 10 == 0) { // only store every 10th sample to reduce memory usage
+        if (velsCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
             velsHistory.add(vels);
-            if (velsHistory.size() > 1800) { // remove sample if more than 1800 (=30 * 6 for 10th sampled and just latest 30 secs) for perfromance and memory
+            if (velsHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
                 velsHistory.remove(0);
             }
         }
