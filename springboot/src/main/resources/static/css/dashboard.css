@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #333;
+}
+
+.header {
+    background: #2d3748;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: row;      /* nebeneinander */
+    align-items: flex-start;  /* oben ausrichten */
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    /*border-radius: 12px;*/
+    /*padding: 20px;*/
+    /*box-shadow: 0 4px 12px rgba(0,0,0,0.08);*/
+    transition: transform 0.2s ease;
+    width: 90%;
+}
+
+.joint-buttons {
+    display: flex;
+    flex-direction: column;   /* untereinander */
+    gap: 10px;                /* Abstand zwischen Buttons */
+    width: 10%;
+}
+
+.joint-button {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.joint-button:hover {
+    background: #2b6cb0;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #3182ce;
+}
+
+.list {
+    font-size: 16px;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.status-running {
+    color: #38a169;
+}
+
+.status-stopped {
+    color: #e53e3e;
+}
+
+.status-ready {
+    color: #e9e607;
+}
+
+.status-error {
+    color: #e90770;
+}

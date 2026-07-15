@@ -1,24 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Robot Dashboard</title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
     <body>
 
-        <h1>Robot Dashboard</h1>
+        <div class="header">Robot Dashboard</div>
 
-        <p>Machine State: <span id="machineState"></span></p>
-        <p>Positions: <span id="positions"></span></p>
-        <p>Velocities: <span id="velocities"></span></p>
+        <div class="container">
 
-        <script>
-            async function update() {
-                const data = await fetch("/api/robot/state").then(r => r.json()); // fetch state from RESTful API and parse as json
+            <div class="card">
+                <div class="title">Machine State</div>
+                <div id="machineState" class="value">-</div>
+            </div>
 
-                document.getElementById("machineState").innerText = data.machineState;
-                document.getElementById("positions").innerText = data.pos.join(", ");
-                document.getElementById("velocities").innerText = data.vels.join(", ");
-            }
+            <div class="card">
+                <div class="title">Positions</div>
+                <div id="positions" class="list">-</div>
+            </div>
 
-            setInterval(update, 1000);
-        </script>
+            <div class="card">
+                <div class="title">Velocities</div>
+                <div id="vels" class="list">-</div>
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <div class="joint-buttons">
+                <button id="joint0" class="joint-button">Joint 0</button>
+                <button id="joint1" class="joint-button">Joint 1</button>
+                <button id="joint2" class="joint-button">Joint 2</button>
+                <button id="joint3" class="joint-button">Joint 3</button>
+                <button id="joint4" class="joint-button">Joint 4</button>
+                <button id="joint5" class="joint-button">Joint 5</button>
+            </div>
+
+            <div class="card">
+                <div class="title">Live Tracking (Joint 0)</div>
+                <canvas id="posChart"></canvas>
+            </div>
+        </div>
+
+        <script src="/js/dashboard.js"></script>
 
     </body>
 </html>

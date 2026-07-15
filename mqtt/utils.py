@@ -31,7 +31,7 @@ def connect(clientCfg: ClientCfg):
 def publish(client: mqtt_client.Client, topic, payload):
     msg_count = 1
     while True:
-        time.sleep(0.1)
+        time.sleep(0.0167)
         msg = f"messages: {msg_count}"
         result = client.publish(topic, payload)
         status = result.rc
@@ -40,7 +40,7 @@ def publish(client: mqtt_client.Client, topic, payload):
         else:
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
-        if msg_count > 100:
+        if msg_count > 600:
             break
 
 # subscribe data on the topic
