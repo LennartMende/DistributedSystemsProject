@@ -1,0 +1,10 @@
+Aufgaben von Prof. Pretschner unter Extensions:
+• Multiple device identifiers.
+• Alarm states for threshold violations.
+• Web dashboard with auto-refresh.
+• Historical data storage.
+• Docker setup for Mosquitto.
+
+weitere eigene Ideen
+• Zertifikate für Publisher und Subscriber
+• ist die aktuelle Historiendarstellung wirklich RESTful??? Da Historie ja EHEMALIGE Zustände abdeckt
