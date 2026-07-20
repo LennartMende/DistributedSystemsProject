@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MqttRobotSubscriber implements ApplicationRunner {
 
-    private final RobotStateService robotStateService;
+    private final LeaderStateService leaderStateService;
+    private final FollowerStateService followerStateService;
+
 
     @Value("${robot.mqtt.broker}")
     private String broker;
@@ -21,17 +23,27 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     @Value("${robot.mqtt.client-id}")
     private String clientId;
 
-    @Value("${robot.mqtt.pos-topic}")
-    private String posTopic;
+    @Value("${robot.mqtt.leader.pos-topic}")
+    private String leaderPosTopic;
 
-    @Value("${robot.mqtt.vels-topic}")
-    private String velsTopic;
+    @Value("${robot.mqtt.leader.vels-topic}")
+    private String leaderVelsTopic;
 
-    @Value("${robot.mqtt.state-topic}")
-    private String stateTopic;
+    @Value("${robot.mqtt.leader.state-topic}")
+    private String leaderStateTopic;
 
-    public MqttRobotSubscriber(RobotStateService robotStateService) {
-        this.robotStateService = robotStateService;
+    @Value("${robot.mqtt.follower.pos-topic}")
+    private String followerPosTopic;
+
+    @Value("${robot.mqtt.follower.vels-topic}")
+    private String followerVelsTopic;
+
+    @Value("${robot.mqtt.follower.state-topic}")
+    private String followerStateTopic;
+
+    public MqttRobotSubscriber(LeaderStateService leaderStateService, FollowerStateService followerStateService) {
+        this.leaderStateService = leaderStateService;
+        this.followerStateService = followerStateService;
     }
 
     @Override
@@ -50,28 +62,48 @@ public class MqttRobotSubscriber implements ApplicationRunner {
 
         client.connect(options);
 
-        IMqttMessageListener posListener =
-        (topic, message) -> handlePos(message);
+        // listeners for leader and follower
+        IMqttMessageListener leaderPosListener =
+            (topic, message) -> handlePos(leaderStateService, message);
 
-        IMqttMessageListener velsListener =
-        (topic, message) -> handleVels(message);
+        IMqttMessageListener leaderVelsListener =
+            (topic, message) -> handleVels(leaderStateService, message);
 
-        IMqttMessageListener stateListener =
-        (topic, message) -> handleMachineState(message);
+        IMqttMessageListener leaderStateListener =
+            (topic, message) -> handleMachineState(leaderStateService, message);
 
-        client.subscribe(posTopic, 1, posListener);
-        client.subscribe(velsTopic, 1, velsListener);
-        client.subscribe(stateTopic, 1, stateListener);
 
-        System.out.println("MQTT bridge subscribed to " + posTopic);
-        System.out.println("MQTT bridge subscribed to " + velsTopic);
-        System.out.println("MQTT bridge subscribed to " + stateTopic);
+        IMqttMessageListener followerPosListener =
+            (topic, message) -> handlePos(followerStateService, message);
+
+        IMqttMessageListener followerVelsListener =
+            (topic, message) -> handleVels(followerStateService, message);
+
+        IMqttMessageListener followerStateListener =
+            (topic, message) -> handleMachineState(followerStateService, message);
+
+        // subsciptions for leader and follower
+        client.subscribe(leaderPosTopic, 1, leaderPosListener);
+        client.subscribe(leaderVelsTopic, 1, leaderVelsListener);
+        client.subscribe(leaderStateTopic, 1, leaderStateListener);
+
+        client.subscribe(followerPosTopic, 1, followerPosListener);
+        client.subscribe(followerVelsTopic, 1, followerVelsListener);
+        client.subscribe(followerStateTopic, 1, followerStateListener);
+
+
+        System.out.println("MQTT bridge subscribed to " + leaderPosTopic);
+        System.out.println("MQTT bridge subscribed to " + leaderVelsTopic);
+        System.out.println("MQTT bridge subscribed to " + leaderStateTopic);
+        System.out.println("MQTT bridge subscribed to " + followerPosTopic);
+        System.out.println("MQTT bridge subscribed to " + followerVelsTopic);
+        System.out.println("MQTT bridge subscribed to " + followerStateTopic);
     }
 
-    private void handlePos(MqttMessage message) {
+    private void handlePos(RobotStateService service, MqttMessage message) {
         String payload = new String(message.getPayload());
         try {
-            robotStateService.updatePos(payload);
+            service.updatePos(payload);
             System.out.println("Positions updated: " + payload);
         } catch (Exception e) {
             System.err.println("Failed to update positions: " + e.getMessage());
@@ -79,10 +111,10 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         }
     }
 
-    private void handleVels(MqttMessage message) {
+    private void handleVels(RobotStateService service, MqttMessage message) {
         String payload = new String(message.getPayload());
         try {
-            robotStateService.updateVels(payload);
+            service.updateVels(payload);
             System.out.println("Velocities updated: " + payload);
         } catch (Exception e) {
             System.err.println("Failed to update velocities: " + e.getMessage());
@@ -90,9 +122,9 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         }
     }
 
-    private void handleMachineState(MqttMessage message) {
+    private void handleMachineState(RobotStateService service, MqttMessage message) {
         String payload = new String(message.getPayload());
-        robotStateService.updateMachineState(payload);
+        service.updateMachineState(payload);
         System.out.println("Machine state updated: " + payload);
     }
 }

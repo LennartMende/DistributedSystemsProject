@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Robot Dashboard</title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #f5f7fa;
+                color: #333;
+            }
+
+            .header {
+                background: #2d3748;
+                color: white;
+                padding: 20px;
+                text-align: center;
+                font-size: 28px;
+                font-weight: bold;
+                letter-spacing: 1px;
+            }
+
+            .container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .card {
+                background: white;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                transition: transform 0.2s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-4px);
+            }
+
+            .title {
+                font-size: 20px;
+                margin-bottom: 10px;
+                font-weight: bold;
+                color: #2d3748;
+            }
+
+            .value {
+                font-size: 32px;
+                font-weight: bold;
+                color: #3182ce;
+            }
+
+            .list {
+                font-size: 16px;
+                margin-top: 10px;
+                line-height: 1.6;
+            }
+
+            .status-running {
+                color: #38a169;
+            }
+
+            .status-stopped {
+                color: #e53e3e;
+            }
+
+            .status-ready {
+                color: #e9e607;
+            }
+
+            .status-error {
+                color: #e90770;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+    <body>
+
+        <div class="header">Robot Dashboard</div>
+
+        <div class="container">
+
+            <div class="card">
+                <div class="title">Machine State</div>
+                <div id="machineState" class="value">-</div>
+            </div>
+
+            <div class="card">
+                <div class="title">Positions</div>
+                <div id="positions" class="list">-</div>
+            </div>
+
+            <div class="card">
+                <div class="title">Velocities</div>
+                <div id="vels" class="list">-</div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="title">Live Tracking (Joint 0)</div>
+            <canvas id="posChart"></canvas>
+        </div>
+
+        <script>
+            async function update() {
+                try {
+                    const state = await fetch("/api/robot/state").then(r => r.json());
+                    const history = await fetch("/api/robot/posList").then(r => r.json());
+
+                    // Machine state
+                    const ms = document.getElementById("machineState");
+                    ms.innerText = state.machineState;
+
+                    if (state.machineState === "RUNNING") {
+                        ms.className = "value status-running";
+                    } else if(state.machineState === "READY") {
+                        ms.className = "value status-ready";
+                    } else if(state.machineState === "STOPPED") {
+                        ms.className = "value status-stopped";
+                    } else {
+                        ms.className = "value status-error";
+                    }
+
+                    // Positions
+                    document.getElementById("positions").innerText =
+                        state.pos ? state.pos.join(", ") : "-";
+
+                    // Velocities
+                    document.getElementById("vels").innerText =
+                        state.vels ? state.vels.join(", ") : "-";
+
+                    // Live chart update (Joint 0)
+                    const joint0 = history.map(h => h[0]); // alle Werte von pos[0]
+
+                    posChart.data.labels = joint0.map((_, i) => i); // Sample index
+                    posChart.data.datasets[0].data = joint0;
+                    posChart.update();
+
+                } catch (err) {
+                    console.error("Fetch error:", err);
+                }
+            }
+            setInterval(update, 400);
+            update();
+        </script>
+
+        <script>
+            const ctx = document.getElementById('posChart').getContext('2d');
+            const posChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Zeitpunkte
+                    datasets: [{
+                        label: 'Joint 0 Position',
+                        data: [],
+                        borderColor: '#3182ce',
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    animation: false,
+                    scales: {
+                        x: { title: { display: true, text: 'Samples' }},
+                        y: { title: { display: true, text: 'Position' }}
+                    }
+                }
+            });
+        </script>
+        
+    </body>
+</html>

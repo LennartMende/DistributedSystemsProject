@@ -35,8 +35,8 @@ const posChart = new Chart(ctx, {
 
 async function update() {
     try {
-        const state = await fetch("/api/robot/state").then(r => r.json());
-        const history = await fetch("/api/robot/posList").then(r => r.json());
+        const state = await fetch("/api/robot/leader/state").then(r => r.json());
+        const history = await fetch("/api/robot/leader/posList").then(r => r.json());
 
         // Machine state
         msElement.innerText = state.machineState;
