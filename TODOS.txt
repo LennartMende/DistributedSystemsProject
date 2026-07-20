@@ -7,4 +7,5 @@ Aufgaben von Prof. Pretschner unter Extensions:
 
 weitere eigene Ideen
 • Zertifikate für Publisher und Subscriber
-• ist die aktuelle Historiendarstellung wirklich RESTful??? Da Historie ja EHEMALIGE Zustände abdeckt
+• automatisch verbindende Python-Publisher und Subscriber
+• eventuell Regler zur Einstellung der Roboter-Pose über Website

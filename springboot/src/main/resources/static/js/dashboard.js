@@ -1,6 +1,8 @@
 // ---------------------------------------------------------
 // 1. Initialisierung
 // ---------------------------------------------------------
+let currentJoint = 0;
+let currentArm = "leader";   // "leader" oder "follower"
 
 const msElement = document.getElementById("machineState");
 const posElement = document.getElementById("positions");
@@ -35,8 +37,9 @@ const posChart = new Chart(ctx, {
 
 async function update() {
     try {
-        const state = await fetch("/api/robot/leader/state").then(r => r.json());
-        const history = await fetch("/api/robot/leader/posList").then(r => r.json());
+        // Dynamisch Leader/Follower abrufen
+        const state = await fetch(`/api/robot/${currentArm}/state`).then(r => r.json());
+        const history = await fetch(`/api/robot/${currentArm}/posList`).then(r => r.json());
 
         // Machine state
         msElement.innerText = state.machineState;
@@ -57,15 +60,30 @@ async function update() {
         // Velocities
         velsElement.innerText = state.vels ? state.vels.join(", ") : "-";
 
-        // Chart update
-        const joint0 = history.map(h => h[0]);
-        posChart.data.labels = joint0.map((_, i) => i);
-        posChart.data.datasets[0].data = joint0;
+        // Chart update – dynamisch nach currentJoint
+        const jointValues = history.map(h => h[currentJoint]);
+        posChart.data.labels = jointValues.map((_, i) => i);
+        posChart.data.datasets[0].data = jointValues;
         posChart.update();
 
     } catch (err) {
         console.error("Fetch error:", err);
     }
+}
+
+function selectJoint(jointIndex) {
+    currentJoint = jointIndex;
+
+    // Chart-Titel aktualisieren
+    document.getElementById("chartTitle").innerText =
+        `Live Tracking (Joint ${currentJoint})`;
+
+    // Dataset-Label aktualisieren
+    posChart.data.datasets[0].label = `Joint ${currentJoint} Position`;
+}
+
+function selectArm(arm) {
+    currentArm = arm;
 }
 
 

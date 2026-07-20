@@ -22,6 +22,24 @@ body {
     padding: 20px;
 }
 
+.arm-switch-buttons {
+    display: flex;
+    flex-direction: row;   /* untereinander */
+    gap: 0px;                /* Abstand zwischen Buttons */
+    width: 100%;
+}
+
+.arm-switch-button {
+    background: #f19d0b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 50%;
+}
+
 .chart-container {
     display: flex;
     flex-direction: row;      /* nebeneinander */
