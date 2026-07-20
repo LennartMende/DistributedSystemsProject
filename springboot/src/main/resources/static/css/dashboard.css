@@ -40,6 +40,17 @@ body {
     width: 50%;
 }
 
+.arm-switch-button-clicked {
+    background: #896320;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 50%;
+}
+
 .chart-container {
     display: flex;
     flex-direction: row;      /* nebeneinander */
@@ -66,6 +77,16 @@ body {
 
 .joint-button {
     background: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.joint-button-clicked {
+    background: #08447c;
     color: white;
     border: none;
     padding: 10px 20px;

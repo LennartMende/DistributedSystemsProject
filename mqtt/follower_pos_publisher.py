@@ -32,7 +32,7 @@ def main():
     clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
-    utils.publish(client=client, topic=topic, payload=payload)
+    utils.publish(client=client, topic=topic)
     client.loop_stop()
     client.disconnect()
 

@@ -13,32 +13,48 @@
         <div class="header">Robot Dashboard</div>
 
         <div class="container">
-
+            <!--LEADER-->
             <div class="card">
-                <div class="title">Machine State</div>
-                <div id="machineState" class="value">-</div>
+                <div class="title">Leader machine state</div>
+                <div id="leaderMachineState" class="value">-</div>
             </div>
 
             <div class="card">
-                <div class="title">Positions</div>
-                <div id="positions" class="list">-</div>
+                <div class="title">Leader positions</div>
+                <div id="leaderPositions" class="list">-</div>
             </div>
 
             <div class="card">
-                <div class="title">Velocities</div>
-                <div id="vels" class="list">-</div>
+                <div class="title">Leader velocities</div>
+                <div id="leaderVels" class="list">-</div>
+            </div>
+
+            <!--FOLLOWER-->
+            <div class="card">
+                <div class="title">Follower machine state</div>
+                <div id="followerMachineState" class="value">-</div>
+            </div>
+
+            <div class="card">
+                <div class="title">Follower positions</div>
+                <div id="followerPositions" class="list">-</div>
+            </div>
+
+            <div class="card">
+                <div class="title">Follower velocities</div>
+                <div id="followerVels" class="list">-</div>
             </div>
 
         </div>
 
         <div class="arm-switch-buttons">
-            <button id="leader" class="arm-switch-button" onclick="selectArm('leader')">Leader</button>
+            <button id="leader" class="arm-switch-button-clicked" onclick="selectArm('leader')">Leader</button>
             <button id="follower" class="arm-switch-button" onclick="selectArm('follower')">Follower</button>
         </div>
 
         <div class="chart-container">
             <div class="joint-buttons">
-                <button id="joint0" class="joint-button" onclick="selectJoint(0)">Joint 0</button>
+                <button id="joint0" class="joint-button-clicked" onclick="selectJoint(0)">Joint 0</button>
                 <button id="joint1" class="joint-button" onclick="selectJoint(1)">Joint 1</button>
                 <button id="joint2" class="joint-button" onclick="selectJoint(2)">Joint 2</button>
                 <button id="joint3" class="joint-button" onclick="selectJoint(3)">Joint 3</button>
