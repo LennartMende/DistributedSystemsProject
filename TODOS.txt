@@ -1,11 +1,8 @@
 Aufgaben von Prof. Pretschner unter Extensions:
 • Multiple device identifiers.
 • Alarm states for threshold violations.
-• Web dashboard with auto-refresh.
-• Historical data storage.
 • Docker setup for Mosquitto.
 
 weitere eigene Ideen
 • Zertifikate für Publisher und Subscriber
-• automatisch verbindende Python-Publisher und Subscriber
 • eventuell Regler zur Einstellung der Roboter-Pose über Website
