@@ -2,6 +2,8 @@
 
 __pycache__/
 
+mqtt/__pycache__/
+
 springboot/target/
 
 venv/
