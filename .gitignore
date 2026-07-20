@@ -5,3 +5,7 @@ __pycache__/
 springboot/target/
 
 venv/
+
+certs/
+mosquitto/data/
+mosquitto/log/

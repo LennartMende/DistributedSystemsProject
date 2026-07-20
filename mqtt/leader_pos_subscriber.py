@@ -18,7 +18,7 @@ print(utils.__file__)
 broker = BROKER
 port = PORT
 topic = "leader/pos"
-client_id = 'py_pos_sub'
+client_id = 'leader_pos_subscriber'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 username = USERNAME
 password = PASSWORD

@@ -151,6 +151,24 @@ function selectArm(arm) {
 
 }
 
+/*
+function readAllJoints() {
+    const joints = {
+        shoulder_pan: document.getElementById("joint0_slider").value,
+        shoulder_lift: document.getElementById("joint1_slider").value,
+        elbow_flex: document.getElementById("joint2_slider").value,
+        wrist_flex: document.getElementById("joint3_slider").value,
+        wrist_roll: document.getElementById("joint4_slider").value,
+        gripper: document.getElementById("joint5_slider").value,
+    };
+
+    console.log("Sample:", joints);
+    // hier kannst du publishen, REST callen, Chart updaten, etc.
+}
+
+// 60 Hz → 1000ms / 60 ≈ 16.7ms
+setInterval(readAllJoints, 16.7);
+*/
 
 // ---------------------------------------------------------
 // 3. Startlogik

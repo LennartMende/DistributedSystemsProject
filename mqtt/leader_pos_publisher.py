@@ -17,7 +17,7 @@ import json
 broker = BROKER
 port = PORT
 topic = "leader/pos"
-client_id = 'py_pos_pub'
+client_id = 'leader_pos_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 username = USERNAME
 password = PASSWORD
