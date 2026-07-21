@@ -20,12 +20,12 @@ public class RobotStateService {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final List<String> JOINT_KEYS = List.of(
-        "shoulder_pan",
-        "shoulder_lift",
-        "elbow_flex",
-        "wrist_flex",
-        "wrist_roll",
-        "gripper"
+        "shoulder_pan.pos",
+        "shoulder_lift.pos",
+        "elbow_flex.pos",
+        "wrist_flex.pos",
+        "wrist_roll.pos",
+        "gripper.pos"
     );
 
     private final RobotState state = new RobotState();

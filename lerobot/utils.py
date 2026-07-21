@@ -72,6 +72,7 @@ def publish(client: mqtt_client.Client, topic, payload: dict):
     else:
         print(f"Failed to send message to topic {topic}")
     # msg_count += 1 if extern msg_count is passed as an argument
+    
 
 # subscribe data on the topic
 def subscribe(client: mqtt_client.Client, topic):

@@ -16,23 +16,23 @@ import json
 # setup
 broker = BROKER
 port = PORT
-topic = "leader/vels"
-client_id = 'leader_vel_publisher'
+topic = "follower/pos"
+client_id = 'follower_pos_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 username = USERNAME
 password = PASSWORD
 
 
-vel_dummy_dict = {"shoulder_pan": 0, "shoulder_lift": 0, "elbow_flex": 0, "wrist_flex": 0, "wrist_roll": 0, "gripper": 0}
+pos_dummy_dict = {"shoulder_pan": 0, "shoulder_lift": 0, "elbow_flex": 0, "wrist_flex": 0, "wrist_roll": 0, "gripper": 0}
 
-payload = json.dumps(vel_dummy_dict)
+payload = json.dumps(pos_dummy_dict)
 
 
 def main():
     clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
-    utils.example_publish(client=client, topic=topic)
+    utils.publish(client=client, topic=topic)
     client.loop_stop()
     client.disconnect()
 
