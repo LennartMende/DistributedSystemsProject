@@ -99,6 +99,16 @@ class Robot(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def get_temperature(self) -> dict[str, Any]:
+        """Gets the temperature to be analyzed."""
+        pass
+
+    @abc.abstractmethod
+    def get_voltage(self) -> dict[str, Any]:
+        """Gets the voltage to be analyzed."""
+        pass
+
+    @abc.abstractmethod
     def send_action(self, action: dict[str, Any]) -> dict[str, Any]:
         """Sends actions to the robot."""
         pass

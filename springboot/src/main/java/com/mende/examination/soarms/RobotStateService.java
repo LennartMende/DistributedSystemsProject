@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class RobotStateService {
     private final List<Double[]> posHistory = new ArrayList<>();
-    private final List<Double[]> velsHistory = new ArrayList<>();
+    private final List<Double[]> tempHistory = new ArrayList<>();
+    private final List<Double[]> voltHistory = new ArrayList<>();
     private int posCounter = 0;
-    private int velsCounter = 0;
+    private int tempCounter = 0;
+    private int voltCounter = 0;
     private int sampleRate = 10; // sample every 10th message
     private int bufferCapacity = 180; // store up to 180 samples (30 seconds of data at 10Hz)
 
@@ -30,6 +32,7 @@ public class RobotStateService {
 
     private final RobotState state = new RobotState();
 
+    // Positions
     public synchronized List<Double[]> getPosList() {
         return new ArrayList<>(posHistory);
     }
@@ -49,25 +52,34 @@ public class RobotStateService {
         }
     }
 
-    public synchronized List<Double[]> getVelsList() {
-        return new ArrayList<>(velsHistory);
+    // Temperatures
+    public synchronized List<Double[]> getTempList() {
+        return new ArrayList<>(tempHistory);
     }
 
-    public synchronized void updateVels(String payload) {
-        Double[] vels = parseDoubleArray(payload);
-        state.setVels(vels);
-        extendVelsHistory(vels);
+    public synchronized void updateTemp(String payload) {
+        Double[] temp = parseDoubleArray(payload);
+        state.setTemp(temp);
+        extendTempHistory(temp);
     }
 
-    private void extendVelsHistory(Double[] vels) {
-        if (velsCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
-            velsHistory.add(vels);
-            if (velsHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
-                velsHistory.remove(0);
+    private void extendTempHistory(Double[] temp) {
+        if (tempCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
+            tempHistory.add(temp);
+            if (tempHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
+                tempHistory.remove(0);
             }
         }
     }
 
+    // Voltages
+    public synchronized void updateVolt(String payload) {
+        Double[] volt = parseDoubleArray(payload);
+        state.setVolt(volt);
+        extendPosHistory(volt);
+    }
+
+    // Machine state
     public synchronized void updateMachineState(String payload) {
         state.setMachineState(payload.trim());
     }
@@ -92,8 +104,11 @@ public class RobotStateService {
         if (state.getPos() != null) {
             copy.setPos(state.getPos());
         }
-        if (state.getVels() != null) {
-            copy.setVels(state.getVels());
+        if (state.getTemp() != null) {
+            copy.setTemp(state.getTemp());
+        }
+        if (state.getVolt() != null) {
+            copy.setVolt(state.getVolt());
         }
         if (state.getMachineState() != null) {
             copy.setMachineState(state.getMachineState());

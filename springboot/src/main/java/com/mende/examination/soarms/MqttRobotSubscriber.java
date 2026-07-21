@@ -26,8 +26,11 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     @Value("${robot.mqtt.leader.pos-topic}")
     private String leaderPosTopic;
 
-    @Value("${robot.mqtt.leader.vels-topic}")
-    private String leaderVelsTopic;
+    @Value("${robot.mqtt.leader.temp-topic}")
+    private String leaderTempTopic;
+
+    @Value("${robot.mqtt.leader.volt-topic}")
+    private String leaderVoltTopic;
 
     @Value("${robot.mqtt.leader.state-topic}")
     private String leaderStateTopic;
@@ -35,8 +38,11 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     @Value("${robot.mqtt.follower.pos-topic}")
     private String followerPosTopic;
 
-    @Value("${robot.mqtt.follower.vels-topic}")
-    private String followerVelsTopic;
+    @Value("${robot.mqtt.follower.temp-topic}")
+    private String followerTempTopic;
+
+    @Value("${robot.mqtt.follower.volt-topic}")
+    private String followerVoltTopic;
 
     @Value("${robot.mqtt.follower.state-topic}")
     private String followerStateTopic;
@@ -66,8 +72,11 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         IMqttMessageListener leaderPosListener =
             (topic, message) -> handlePos(leaderStateService, message);
 
-        IMqttMessageListener leaderVelsListener =
-            (topic, message) -> handleVels(leaderStateService, message);
+        IMqttMessageListener leaderTempListener =
+            (topic, message) -> handleTemp(leaderStateService, message);
+        
+        IMqttMessageListener leaderVoltListener =
+            (topic, message) -> handleVolt(leaderStateService, message);
 
         IMqttMessageListener leaderStateListener =
             (topic, message) -> handleMachineState(leaderStateService, message);
@@ -76,27 +85,34 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         IMqttMessageListener followerPosListener =
             (topic, message) -> handlePos(followerStateService, message);
 
-        IMqttMessageListener followerVelsListener =
-            (topic, message) -> handleVels(followerStateService, message);
+        IMqttMessageListener followerTempListener =
+            (topic, message) -> handleTemp(followerStateService, message);
+
+        IMqttMessageListener followerVoltListener =
+            (topic, message) -> handleVolt(followerStateService, message);
 
         IMqttMessageListener followerStateListener =
             (topic, message) -> handleMachineState(followerStateService, message);
 
         // subsciptions for leader and follower
         client.subscribe(leaderPosTopic, 1, leaderPosListener);
-        client.subscribe(leaderVelsTopic, 1, leaderVelsListener);
+        client.subscribe(leaderTempTopic, 1, leaderTempListener);
+        client.subscribe(leaderVoltTopic, 1, leaderVoltListener);
         client.subscribe(leaderStateTopic, 1, leaderStateListener);
 
         client.subscribe(followerPosTopic, 1, followerPosListener);
-        client.subscribe(followerVelsTopic, 1, followerVelsListener);
+        client.subscribe(followerTempTopic, 1, followerTempListener);
+        client.subscribe(followerVoltTopic, 1, followerVoltListener);
         client.subscribe(followerStateTopic, 1, followerStateListener);
 
 
         System.out.println("MQTT bridge subscribed to " + leaderPosTopic);
-        System.out.println("MQTT bridge subscribed to " + leaderVelsTopic);
+        System.out.println("MQTT bridge subscribed to " + leaderTempTopic);
+        System.out.println("MQTT bridge subscribed to " + leaderVoltTopic);
         System.out.println("MQTT bridge subscribed to " + leaderStateTopic);
         System.out.println("MQTT bridge subscribed to " + followerPosTopic);
-        System.out.println("MQTT bridge subscribed to " + followerVelsTopic);
+        System.out.println("MQTT bridge subscribed to " + followerTempTopic);
+        System.out.println("MQTT bridge subscribed to " + followerVoltTopic);
         System.out.println("MQTT bridge subscribed to " + followerStateTopic);
     }
 
@@ -111,13 +127,24 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         }
     }
 
-    private void handleVels(RobotStateService service, MqttMessage message) {
+    private void handleTemp(RobotStateService service, MqttMessage message) {
         String payload = new String(message.getPayload());
         try {
-            service.updateVels(payload);
-            System.out.println("Velocities updated: " + payload);
+            service.updateTemp(payload);
+            System.out.println("Temperatures updated: " + payload);
         } catch (Exception e) {
-            System.err.println("Failed to update velocities: " + e.getMessage());
+            System.err.println("Failed to update voltages: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void handleVolt(RobotStateService service, MqttMessage message) {
+        String payload = new String(message.getPayload());
+        try {
+            service.updateVolt(payload);
+            System.out.println("Voltages updated: " + payload);
+        } catch (Exception e) {
+            System.err.println("Failed to update voltages: " + e.getMessage());
             e.printStackTrace();
         }
     }

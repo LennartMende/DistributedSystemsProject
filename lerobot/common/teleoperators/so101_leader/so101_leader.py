@@ -136,6 +136,24 @@ class SO101Leader(Teleoperator):
         logger.debug(f"{self} read action: {dt_ms:.1f}ms")
         return action
 
+    def get_temperature(self) -> dict[str, float]:
+        start = time.perf_counter()
+        temp = self.bus.sync_read("Present_Temperature")
+        temp = {f"{motor}.temp": val for motor, val in temp.items()}
+
+        dt_ms = (time.perf_counter() - start) * 1e3
+        logger.debug(f"{self} read temperature: {dt_ms:.1f}ms")
+        return temp
+    
+    def get_voltage(self) -> dict[str, float]:
+        start = time.perf_counter()
+        volt = self.bus.sync_read("Present_Voltage")
+        volt = {f"{motor}.volt": val/10 for motor, val in volt.items()}
+
+        dt_ms = (time.perf_counter() - start) * 1e3
+        logger.debug(f"{self} read voltage: {dt_ms:.1f}ms")
+        return volt
+
     def send_feedback(self, feedback: dict[str, float]) -> None:
         # TODO(rcadene, aliberts): Implement force feedback
         raise NotImplementedError

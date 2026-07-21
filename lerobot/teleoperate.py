@@ -37,6 +37,7 @@ class TeleoperateConfig:
 
 
 # create clients
+# positions
 follower_pos_topic = "follower/pos"
 client_id = 'follower_pos_publisher'
 clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
@@ -46,6 +47,29 @@ leader_pos_topic = "leader/pos"
 client_id = 'leader_pos_publisher'
 clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
 leader_pos_publisher = connect_client(clientCfg=clientCfg)
+
+# temperatures
+follower_temp_topic = "follower/temp"
+client_id = 'follower_temp_publisher'
+clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+follower_temp_publisher = connect_client(clientCfg=clientCfg)
+
+leader_temp_topic = "leader/temp"
+client_id = 'leader_temp_publisher'
+clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+leader_temp_publisher = connect_client(clientCfg=clientCfg)
+
+# voltages
+follower_volt_topic = "follower/volt"
+client_id = 'follower_volt_publisher'
+clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+follower_volt_publisher = connect_client(clientCfg=clientCfg)
+
+leader_volt_topic = "leader/volt"
+client_id = 'leader_volt_publisher'
+clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+leader_volt_publisher = connect_client(clientCfg=clientCfg)
+
 
 
 def teleop_loop(
@@ -64,8 +88,20 @@ def teleop_loop(
         leader_pos = teleop.get_action()
         follower_pos = robot.get_observation()
 
+        leader_temp = teleop.get_temperature()
+        follower_temp = robot.get_temperature()
+
+        leader_volt = teleop.get_voltage()
+        follower_volt = robot.get_voltage()
+
         publish(leader_pos_publisher, leader_pos_topic, leader_pos)
         publish(follower_pos_publisher, follower_pos_topic, follower_pos)
+
+        publish(leader_temp_publisher, leader_temp_topic, leader_temp)
+        publish(follower_temp_publisher, follower_temp_topic, follower_temp)
+
+        publish(leader_volt_publisher, leader_volt_topic, leader_volt)
+        publish(follower_volt_publisher, follower_volt_topic, follower_volt)
 
         busy_wait(1 / fps - dt_s)
 

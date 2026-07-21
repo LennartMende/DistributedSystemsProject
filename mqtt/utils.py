@@ -81,7 +81,7 @@ def subscribe(client: mqtt_client.Client, topic):
         try:
             payload_str = msg.payload.decode("utf-8")
             data = json.loads(payload_str)
-            print("JSON:", data)
+            print(topic, data)
         except json.JSONDecodeError:
             print("Received non‑JSON payload:", msg.payload)
 

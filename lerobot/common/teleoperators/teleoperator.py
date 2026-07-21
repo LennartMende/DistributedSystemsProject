@@ -97,6 +97,16 @@ class Teleoperator(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def get_temperature(self) -> dict[str, Any]:
+        """Gets the temperature to be analyzed."""
+        pass
+
+    @abc.abstractmethod
+    def get_voltage(self) -> dict[str, Any]:
+        """Gets the voltage to be analyzed."""
+        pass
+
+    @abc.abstractmethod
     def send_feedback(self, feedback: dict[str, Any]) -> None:
         """Sends feedback captured from a robot to the teleoperator."""
         pass

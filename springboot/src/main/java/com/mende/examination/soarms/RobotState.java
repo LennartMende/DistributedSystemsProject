@@ -5,7 +5,8 @@ import java.time.Instant;
 public class RobotState {
 
     private Double[] pos;
-    private Double[] vels;
+    private Double[] temp;
+    private Double[] volt;
     private String machineState;
     private Instant lastUpdate;
 
@@ -22,12 +23,21 @@ public class RobotState {
         this.lastUpdate = Instant.now();
     }
 
-    public Double[] getVels() {
-        return vels;
+    public Double[] getTemp() {
+        return temp;
     }
 
-    public void setVels(Double[] vels) {
-        this.vels = vels;
+    public void setTemp(Double[] temp) {
+        this.temp = temp;
+        this.lastUpdate = Instant.now();
+    }
+
+    public Double[] getVolt() {
+        return volt;
+    }
+
+    public void setVolt(Double[] volt) {
+        this.volt = volt;
         this.lastUpdate = Instant.now();
     }
 

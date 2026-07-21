@@ -169,6 +169,32 @@ class SO101Follower(Robot):
     #        logger.debug(f"{self} read {cam_key}: {dt_ms:.1f}ms")
 
         return obs_dict
+    
+    def get_temperature(self) -> dict[str, Any]:
+        if not self.is_connected:
+            raise DeviceNotConnectedError(f"{self} is not connected.")
+
+        # Read arm position
+        start = time.perf_counter()
+        temp_dict = self.bus.sync_read("Present_Temperature")
+        temp_dict = {f"{motor}.temp": val for motor, val in temp_dict.items()}
+        dt_ms = (time.perf_counter() - start) * 1e3
+        logger.debug(f"{self} read temperature: {dt_ms:.1f}ms")
+
+        return temp_dict
+
+    def get_voltage(self) -> dict[str, Any]:
+        if not self.is_connected:
+            raise DeviceNotConnectedError(f"{self} is not connected.")
+
+        # Read arm position
+        start = time.perf_counter()
+        volt_dict = self.bus.sync_read("Present_Voltage")
+        volt_dict = {f"{motor}.temp": val/10 for motor, val in volt_dict.items()}
+        dt_ms = (time.perf_counter() - start) * 1e3
+        logger.debug(f"{self} read voltage: {dt_ms:.1f}ms")
+
+        return volt_dict
 
     def send_action(self, action: dict[str, Any]) -> dict[str, Any]:
         """Command arm to move to a target joint configuration.
