@@ -1,4 +1,11 @@
 // ---------------------------------------------------------
+// 0. Imports
+// ---------------------------------------------------------
+import {
+    set_alarms,
+} from "./alarm.js";
+
+// ---------------------------------------------------------
 // 1. Initialisierung
 // ---------------------------------------------------------
 const leaderMsElement = document.getElementById("leaderMachineState");
@@ -56,9 +63,12 @@ async function update() {
 
     try {
         const leaderState = await fetch(`/api/robot/leader/state`).then(r => r.json());
+        const followerState = await fetch(`/api/robot/follower/state`).then(r => r.json());
 
         const leaderHistory = await fetch(`/api/robot/leader/posList`).then(r => r.json());
         const followerHistory = await fetch(`/api/robot/follower/posList`).then(r => r.json())
+
+        set_alarms(leaderState.temp, followerState.temp, leaderState.volt, followerState.volt)
 
         // Machine state anzeigen
         updateMachineState(leaderMsElement, leaderState)
