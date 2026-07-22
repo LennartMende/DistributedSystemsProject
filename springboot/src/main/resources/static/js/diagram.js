@@ -1,6 +1,7 @@
 // ---------------------------------------------------------
 // 1. Initialisierung
 // ---------------------------------------------------------
+const leaderMsElement = document.getElementById("leaderMachineState");
 let currentJoint = 0;
 let currentArm = "leader";   // "leader" oder "follower"
 
@@ -54,8 +55,14 @@ async function update() {
     }
 
     try {
+        const leaderState = await fetch(`/api/robot/leader/state`).then(r => r.json());
+
         const leaderHistory = await fetch(`/api/robot/leader/posList`).then(r => r.json());
         const followerHistory = await fetch(`/api/robot/follower/posList`).then(r => r.json())
+
+        // Machine state anzeigen
+        updateMachineState(leaderMsElement, leaderState)
+        //updateMachineState(followerMsElement, followerState)
 
         // Chart update
         const leaderJointValues = leaderHistory.map(h => h[currentJoint]);
@@ -72,6 +79,29 @@ async function update() {
 
     } catch (err) {
         console.error("Fetch error:", err);
+    }
+}
+
+function updateMachineState(msElement, state) {
+    if (!msElement || !state.machineState || state.machineState==="UNKNOWN") {
+        msElement.innerText = "STATUS UNKNOWN";
+        msElement.className = "value status-unknown";
+        return;
+    }
+
+    msElement.innerText = state.machineState;
+
+    console.log("machineState =", state.machineState);
+
+    if (state.machineState === "RUNNING") {
+        msElement.className = "value status-running";
+    } else if (state.machineState === "READY") {
+        msElement.className = "value status-ready";
+    } else if (state.machineState === "STOPPED") {
+        msElement.className = "value status-stopped";
+    } else {
+        msElement.innerText = "ERROR";
+        msElement.className = "value status-error";
     }
 }
 

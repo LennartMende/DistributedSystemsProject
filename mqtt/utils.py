@@ -79,14 +79,12 @@ def publish(client: mqtt_client.Client, topic, payload: dict):
 # subscribe data on the topic
 def subscribe(client: mqtt_client.Client, topic):
     def on_message(client, user_data, msg):
-        # print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        # print(f"Message = {msg}")
         try:
             payload_str = msg.payload.decode("utf-8")
             data = json.loads(payload_str)
-            print(topic, data)
+            print(topic, ": ", data)
         except json.JSONDecodeError:
-            print("Received non‑JSON payload:", msg.payload)
+            print("Received non-JSON payload:", msg.payload)
 
     client.subscribe(topic)
     client.on_message = on_message

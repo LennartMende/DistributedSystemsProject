@@ -101,8 +101,36 @@ public class RobotStateService {
 
     // Machine state
     public synchronized void updateMachineState(String payload) {
-        state.setMachineState(payload.trim());
+        try {
+            JsonNode root = OBJECT_MAPPER.readTree(payload);
+
+            // 1) {"machineState": "STOPPED"}
+            if (root.has("machineState")) {
+                state.setMachineState(root.get("machineState").asText());
+                return;
+            }
+
+            // 2) {"state": "STOPPED"}
+            if (root.has("state")) {
+                state.setMachineState(root.get("state").asText());
+                return;
+            }
+
+            // 3) {"machine_state": "STOPPED"}
+            if (root.has("machine_state")) {
+                state.setMachineState(root.get("machine_state").asText());
+                return;
+            }
+
+            // 4) Fallback: plain string
+            state.setMachineState(payload.trim());
+
+        } catch (Exception e) {
+            // Fallback: plain string
+            state.setMachineState(payload.trim());
+        }
     }
+
 
     private Double[] parseDoubleArray(String payload, List<String> KEYS) {
         try {

@@ -36,6 +36,11 @@ body {
     background: #2b6cb0;
 }
 
+.machinestate {
+    background: #060e18;
+    display: flex;
+}
+
 .flex-container {
   display: flex;
   flex-direction: row;
@@ -167,7 +172,7 @@ td {
 }
 
 .value {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: bold;
     color: #3182ce;
 }
@@ -195,18 +200,31 @@ td {
     width: 500px;
     margin: 10px 0;
 }
+.status-unknown {
+    font-size: 40px;
+    font-weight: bold;
+    color: #1e1caa;
+}
 .status-running {
+    font-size: 40px;
+    font-weight: bold;
     color: #38a169;
 }
 
 .status-stopped {
+    font-size: 40px;
+    font-weight: bold;
     color: #e53e3e;
 }
 
 .status-ready {
+    font-size: 40px;
+    font-weight: bold;
     color: #e9e607;
 }
 
 .status-error {
+    font-size: 40px;
+    font-weight: bold;
     color: #e90770;
 }

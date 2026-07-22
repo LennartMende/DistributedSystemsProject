@@ -70,6 +70,14 @@ client_id = 'leader_volt_publisher'
 clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
 leader_volt_publisher = connect_client(clientCfg=clientCfg)
 
+# state
+leader_state_topic = "leader/state"
+client_id = 'leader_state_publisher'
+clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+leader_state_publisher = connect_client(clientCfg=clientCfg)
+
+running_dict = {}
+stopped_dict = {}
 
 
 def teleop_loop(
@@ -77,6 +85,7 @@ def teleop_loop(
 ):
     
     start = time.perf_counter()
+    publish(leader_state_publisher, leader_state_topic, running_dict)
 
     while True:
         loop_start = time.perf_counter()

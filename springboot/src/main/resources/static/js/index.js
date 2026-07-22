@@ -1,12 +1,5 @@
 const leaderMsElement = document.getElementById("leaderMachineState");
-const followerMsElement = document.getElementById("followerMachineState");
-
-const leaderPosElement = document.getElementById("leaderPosition");
-const leaderTempElement = document.getElementById("leaderTemp");
-const leaderVoltElement = document.getElementById("leaderVolt");
-const followerPosElement = document.getElementById("followerPosition");
-const followerTempElement = document.getElementById("followerTemp");
-const followerVoltElement = document.getElementById("followerVolt");
+//const followerMsElement = document.getElementById("followerMachineState");
 
 // positions
 leaderPosElements = [document.getElementById("leader_pos_joint0"), document.getElementById("leader_pos_joint1"),
@@ -48,7 +41,7 @@ async function update() {
 
         // Machine state anzeigen
         updateMachineState(leaderMsElement, leaderState)
-        updateMachineState(followerMsElement, followerState)
+        //updateMachineState(followerMsElement, followerState)
 
         // Leader Werte
         updateElements(leaderPosElements, leaderState.pos);
@@ -66,11 +59,15 @@ async function update() {
 }
 
 function updateMachineState(msElement, state) {
-    if (!msElement || !state) {
+    if (!msElement || !state.machineState || state.machineState==="UNKNOWN") {
+        msElement.innerText = "STATUS UNKNOWN";
+        msElement.className = "value status-unknown";
         return;
     }
 
     msElement.innerText = state.machineState;
+
+    console.log("machineState =", state.machineState);
 
     if (state.machineState === "RUNNING") {
         msElement.className = "value status-running";
@@ -79,6 +76,7 @@ function updateMachineState(msElement, state) {
     } else if (state.machineState === "STOPPED") {
         msElement.className = "value status-stopped";
     } else {
+        msElement.innerText = "ERROR";
         msElement.className = "value status-error";
     }
 }
@@ -95,5 +93,7 @@ function updateElements(elements, values) {
     });
 }
 
+//updateMachineState(leaderMsElement, "UNKNOWN")
 update();               // einmaliger Start
+update();
 setInterval(update, 400);  // alle 400 ms aktualisieren
