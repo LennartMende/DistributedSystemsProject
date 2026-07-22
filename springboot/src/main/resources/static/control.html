@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Robot Dashboard</title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+    <body>
+
+        <div class="header">
+            Robot Dashboard
+        </div>
+
+        <div class="navbar">
+            <a href="index.html">General</a>
+            <a href="diagram.html">Diagram</a>
+            <a href="control.html" class="active">Control</a>
+        </div>
+
+        <!-- Seiteninhalt -->
+        <div class="control-slider-rows">
+            <div class="control-slider-row">
+                <h3>Joint 0</h3>
+                <input id="joint0_slider" type=range min="-100" max="100">
+            </div>
+            <div class="control-slider-row">
+                <h3>Joint 1</h3>
+                <input id="joint1_slider" type=range min="-100" max="100">
+            </div>
+            <div class="control-slider-row">
+                <h3>Joint 2</h3>
+                <input id="joint2_slider" type=range min="-100" max="100">
+            </div>
+            <div class="control-slider-row">
+                <h3>Joint 3</h3>
+                <input id="joint3_slider" type=range min="-100" max="100">
+            </div>
+            <div class="control-slider-row">
+                <h3>Joint 4</h3>
+                <input id="joint4_slider" type=range min="-100" max="100">
+            </div>
+            <div class="control-slider-row">
+                <h3>Joint 5</h3>
+                <input id="joint5_slider" type=range min="-100" max="100">
+            </div>
+        </div>
+        
+    </body>
+</html>

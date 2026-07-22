@@ -15,6 +15,55 @@ body {
     letter-spacing: 1px;
 }
 
+.navbar {
+    display: flex;
+    justify-content: center;
+    background: #4a5568;
+}
+
+.navbar a {
+    color: white;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.navbar a:hover {
+    background: #718096;
+}
+
+.navbar a.active {
+    background: #2b6cb0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.index-containers {
+    display: flex;
+    flex-direction: row;
+}
+
+.index-container {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+}
+
+th {
+  font-size: 28px; /* Size for header cells */
+  font-weight: bold;
+  text-align: center;
+}
+
+td {
+  font-size: 24px; /* Size for data cells */
+  text-align: center;
+}
+
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -53,19 +102,26 @@ body {
 
 .chart-container {
     display: flex;
-    flex-direction: row;      /* nebeneinander */
-    align-items: flex-start;  /* oben ausrichten */
+    flex-direction: row;
+    align-items: flex-start;
     gap: 20px;
     padding: 20px;
+    height: 80vh;
 }
 
 .card {
+    flex: 1;
     background: white;
     /*border-radius: 12px;*/
     /*padding: 20px;*/
     /*box-shadow: 0 4px 12px rgba(0,0,0,0.08);*/
     transition: transform 0.2s ease;
     width: 90%;
+}
+
+#posChart {
+    width: 100% !important;
+    height: 70vh !important;
 }
 
 .joint-buttons {
@@ -122,6 +178,23 @@ body {
     line-height: 1.6;
 }
 
+.control-slider-rows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: calc(100vh - 110px);
+}
+
+.control-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 500px;
+    margin: 10px 0;
+}
 .status-running {
     color: #38a169;
 }

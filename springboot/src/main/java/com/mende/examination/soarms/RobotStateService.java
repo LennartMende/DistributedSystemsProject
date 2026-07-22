@@ -2,10 +2,9 @@ package com.mende.examination.soarms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,25 @@ public class RobotStateService {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final List<String> JOINT_KEYS = List.of(
-        "shoulder_pan.pos",
-        "shoulder_lift.pos",
-        "elbow_flex.pos",
-        "wrist_flex.pos",
-        "wrist_roll.pos",
-        "gripper.pos"
+        "shoulder_pan",
+        "shoulder_lift",
+        "elbow_flex",
+        "wrist_flex",
+        "wrist_roll",
+        "gripper"
     );
+
+    private static final List<String> POS_KEYS = JOINT_KEYS.stream()
+        .map(key -> key + ".pos")
+        .toList();
+
+    private static final List<String> TEMP_KEYS = JOINT_KEYS.stream()
+        .map(key -> key + ".temp")
+        .toList();
+
+    private static final List<String> VOLT_KEYS = JOINT_KEYS.stream()
+        .map(key -> key + ".volt")
+        .toList();
 
     private final RobotState state = new RobotState();
 
@@ -38,7 +49,7 @@ public class RobotStateService {
     }
 
     public synchronized void updatePos(String payload) {
-        Double[] pos = parseDoubleArray(payload);
+        Double[] pos = parseDoubleArray(payload, POS_KEYS);
         state.setPos(pos);
         extendPosHistory(pos);
     }
@@ -58,7 +69,7 @@ public class RobotStateService {
     }
 
     public synchronized void updateTemp(String payload) {
-        Double[] temp = parseDoubleArray(payload);
+        Double[] temp = parseDoubleArray(payload, TEMP_KEYS);
         state.setTemp(temp);
         extendTempHistory(temp);
     }
@@ -72,11 +83,20 @@ public class RobotStateService {
         }
     }
 
+    private void extendVoltHistory(Double[] volt) {
+        if (voltCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
+            voltHistory.add(volt);
+            if (voltHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
+                voltHistory.remove(0);
+            }
+        }
+    }
+
     // Voltages
     public synchronized void updateVolt(String payload) {
-        Double[] volt = parseDoubleArray(payload);
+        Double[] volt = parseDoubleArray(payload, VOLT_KEYS);
         state.setVolt(volt);
-        extendPosHistory(volt);
+        extendVoltHistory(volt);
     }
 
     // Machine state
@@ -84,19 +104,44 @@ public class RobotStateService {
         state.setMachineState(payload.trim());
     }
 
-    private Double[] parseDoubleArray(String payload) {
+    private Double[] parseDoubleArray(String payload, List<String> KEYS) {
         try {
-            return OBJECT_MAPPER.readValue(payload, Double[].class);
-        } catch (JsonProcessingException e) {
-            try {
-                Map<String, Number> map = OBJECT_MAPPER.readValue(payload, new TypeReference<Map<String, Number>>() {});
-                return JOINT_KEYS.stream()
-                    .map(key -> map.containsKey(key) ? map.get(key).doubleValue() : 0.0)
-                    .toArray(Double[]::new);
-            } catch (JsonProcessingException ex) {
-                throw new IllegalArgumentException("Ungültiges MQTT-Payload-Format: " + payload, ex);
+            JsonNode root = OBJECT_MAPPER.readTree(payload);
+
+            if (root.isArray()) {
+                Double[] values = new Double[root.size()];
+                for (int i = 0; i < root.size(); i++) {
+                    values[i] = root.get(i).doubleValue();
+                }
+                return values;
             }
+
+            if (root.isObject()) {
+                return KEYS.stream()
+                    .map(key -> extractDoubleValueFromNode(root, key))
+                    .toArray(Double[]::new);
+            }
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Ungültiges MQTT-Payload-Format: " + payload, e);
         }
+
+        throw new IllegalArgumentException("Ungültiges MQTT-Payload-Format: " + payload);
+    }
+
+    private Double extractDoubleValueFromNode(JsonNode root, String key) {
+        JsonNode node = root.get(key);
+        if (node != null && !node.isNull()) {
+            return node.doubleValue();
+        }
+
+        // Fallback: ohne Suffix
+        String simpleKey = key.split("\\.")[0];
+        JsonNode simpleNode = root.get(simpleKey);
+        if (simpleNode != null && !simpleNode.isNull()) {
+            return simpleNode.doubleValue();
+        }
+
+        return -1.0;
     }
 
     public synchronized RobotState currentState() {

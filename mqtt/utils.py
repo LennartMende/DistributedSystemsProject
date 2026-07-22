@@ -36,21 +36,24 @@ def connect(clientCfg: ClientCfg):
 
 # publishes data on the topic
 def example_publish(client: mqtt_client.Client, topic):
+    phys_quantitiy = topic.split('/', 1)[1]
     msg_count = 1
     while True:
         time.sleep(0.0167)
         msg = f"messages: {msg_count}"
 
         pos_dummy_dict = {
-            "shoulder_pan": msg_count,
-            "shoulder_lift": msg_count,
-            "elbow_flex": msg_count,
-            "wrist_flex": msg_count,
-            "wrist_roll": msg_count,
-            "gripper": msg_count
+            "shoulder_pan." + phys_quantitiy : msg_count,
+            "shoulder_lift." + phys_quantitiy : msg_count,
+            "elbow_flex." + phys_quantitiy : msg_count,
+            "wrist_flex." + phys_quantitiy : msg_count,
+            "wrist_roll." + phys_quantitiy : msg_count,
+            "gripper." + phys_quantitiy : msg_count
         }
 
         payload = json.dumps(pos_dummy_dict)
+
+        print("payload = ", payload)
         
         result = client.publish(topic, payload)
         status = result.rc

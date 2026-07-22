@@ -1,7 +1,14 @@
+- kurzfristig:
+• temp und volt ebenfalls im Java-Sub parsen
+• State-Publisher und Subscriber einführen und State in html unter dem Dashboard ausgeben
+
+- langfristig:
 Aufgaben von Prof. Pretschner unter Extensions:
-• Multiple device identifiers.
-• Alarm states for threshold violations.
+• Multiple device identifiers: IDs in json-Payload
+• Alarm states for threshold violations: Warnhinweis, bspw. visuell
 • Docker setup for Mosquitto.
+
+• Error-Fallback-Page
 
 weitere eigene Ideen
 • Zertifikate für Publisher und Subscriber

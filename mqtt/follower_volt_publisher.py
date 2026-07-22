@@ -11,24 +11,31 @@ import logging
 import time
 from paho.mqtt import client as mqtt_client
 import utils
-
-print(utils.__file__)
+import json
 
 # setup
 broker = BROKER
 port = PORT
-topic = "leader/vels"
-client_id = 'leader_vel_subscriber'
+topic = "follower/volt"
+client_id = 'follower_volt_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 username = USERNAME
 password = PASSWORD
 
 
+# volt_dummy_dict = {"shoulder_pan.volt": 0, "shoulder_lift.volt": 0, "elbow_flex.volt": 0, 
+# "wrist_flex.volt": 0, "wrist_roll.volt": 0, "gripper.volt": 0}
+
+# payload = json.dumps(volt_dummy_dict)
+
+
 def main():
     clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
     client = utils.connect(clientCfg=clientCfg)
-    utils.subscribe(client=client, topic=topic)
-    client.loop_forever()
+    client.loop_start()
+    utils.example_publish(client=client, topic=topic)
+    client.loop_stop()
+    client.disconnect()
 
 if __name__ == '__main__':
     main()

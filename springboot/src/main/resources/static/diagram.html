@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Robot Dashboard</title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+    <body>
+
+        <div class="header">
+            Robot Dashboard
+        </div>
+
+        <div class="navbar">
+            <a href="index.html">General</a>
+            <a href="diagram.html" class="active">Diagram</a>
+            <a href="control.html">Control</a>
+        </div>
+
+        <!-- Seiteninhalt -->
+        <div class="chart-container">
+            <div class="joint-buttons">
+                <button id="joint0" class="joint-button-clicked" onclick="selectJoint(0)">Joint 0</button>
+                <button id="joint1" class="joint-button" onclick="selectJoint(1)">Joint 1</button>
+                <button id="joint2" class="joint-button" onclick="selectJoint(2)">Joint 2</button>
+                <button id="joint3" class="joint-button" onclick="selectJoint(3)">Joint 3</button>
+                <button id="joint4" class="joint-button" onclick="selectJoint(4)">Joint 4</button>
+                <button id="joint5" class="joint-button" onclick="selectJoint(5)">Joint 5</button>
+            </div>
+
+            <div class="card">
+                <div id="chartTitle" class="title">Live Tracking (Joint 0)</div>
+                <canvas id="posChart"></canvas>
+            </div>
+        </div>
+
+        <script src="/js/diagram.js"></script>
+
+    </body>
+</html>

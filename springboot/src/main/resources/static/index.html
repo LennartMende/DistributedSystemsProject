@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Robot Dashboard</title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/dashboard.css">
+
+    </head>
+
+    <body>
+
+        <div class="header">
+            Robot Dashboard
+        </div>
+
+        <div class="navbar">
+            <a href="index.html" class="active">General</a>
+            <a href="diagram.html">Diagram</a>
+            <a href="control.html">Control</a>
+        </div>
+
+        <!-- Seiteninhalt -->
+        <div class="index-containers">
+            <div class="index-container">
+                <table>
+                    <tr>
+                        <th>Joint</th>
+                        <th>Position</th>
+                        <th>Temperature</th>
+                        <th>Voltage</th>
+                    </tr>
+                    <tr>
+                        <td>Joint 0</td>
+                        <td id="leader_pos_joint0">-</td>
+                        <td id="leader_temp_joint0">-</td>
+                        <td id="leader_volt_joint0">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 1</td>
+                        <td id="leader_pos_joint1">-</td>
+                        <td id="leader_temp_joint1">-</td>
+                        <td id="leader_volt_joint1">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 2</td>
+                        <td id="leader_pos_joint2">-</td>
+                        <td id="leader_temp_joint2">-</td>
+                        <td id="leader_volt_joint2">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 3</td>
+                        <td id="leader_pos_joint3">-</td>
+                        <td id="leader_temp_joint3">-</td>
+                        <td id="leader_volt_joint3">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 4</td>
+                        <td id="leader_pos_joint4">-</td>
+                        <td id="leader_temp_joint4">-</td>
+                        <td id="leader_volt_joint4">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 5</td>
+                        <td id="leader_pos_joint5">-</td>
+                        <td id="leader_temp_joint5">-</td>
+                        <td id="leader_volt_joint5">-</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="index-container">
+                <table>
+                    <tr>
+                        <th>Joint</th>
+                        <th>Position</th>
+                        <th>Temperature</th>
+                        <th>Voltage</th>
+                    </tr>
+                    <tr>
+                        <td>Joint 0</td>
+                        <td id="follower_pos_joint0">-</td>
+                        <td id="follower_temp_joint0">-</td>
+                        <td id="follower_volt_joint0">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 1</td>
+                        <td id="follower_pos_joint1">-</td>
+                        <td id="follower_temp_joint1">-</td>
+                        <td id="follower_volt_joint1">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 2</td>
+                        <td id="follower_pos_joint2">-</td>
+                        <td id="follower_temp_joint2">-</td>
+                        <td id="follower_volt_joint2">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 3</td>
+                        <td id="follower_pos_joint3">-</td>
+                        <td id="follower_temp_joint3">-</td>
+                        <td id="follower_volt_joint3">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 4</td>
+                        <td id="follower_pos_joint4">-</td>
+                        <td id="follower_temp_joint4">-</td>
+                        <td id="follower_volt_joint4">-</td>
+                    </tr>
+                    <tr>
+                        <td>Joint 5</td>
+                        <td id="follower_pos_joint5">-</td>
+                        <td id="follower_temp_joint5">-</td>
+                        <td id="follower_volt_joint5">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <script src="/js/index.js"></script>
+    </body>
+</html>
