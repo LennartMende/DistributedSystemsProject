@@ -6,9 +6,18 @@
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/dashboard.css">
 
+        <!--DELETE CACHE SO THE PAGE IS AUTOMATICALLY REFRESHED AFTER RESTART-->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
     </head>
 
     <body>
+        <!--ALARM ELEMENTS (POSITION IS IRRELEVANT BECAUSE OF ABSOLUTE POSITIONING)-->
+        <div id="leaderTempAlarm"></div>
+        <div id="leaderVoltAlarm"></div>
+        <div id="followerTempAlarm"></div>
+        <div id="followerVoltAlarm"></div>
 
         <div class="header">
             Robot Dashboard

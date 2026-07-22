@@ -84,7 +84,7 @@ async function update() {
 
 function updateMachineState(msElement, state) {
     if (!msElement || !state.machineState || state.machineState==="UNKNOWN") {
-        msElement.innerText = "STATUS UNKNOWN";
+        msElement.innerText = "STATE UNKNOWN";
         msElement.className = "value status-unknown";
         return;
     }
