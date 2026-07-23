@@ -42,8 +42,19 @@ if (chartCanvas && typeof Chart !== 'undefined') {
         options: {
             animation: false,
             scales: {
-                x: { title: { display: true, text: 'time' }},
-                y: { title: { display: true, text: 'angle' }}
+                x: {
+                    type: 'linear',
+                    title: {
+                        display: true,
+                        text: 'time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'angle'
+                    }
+                }
             }
         }
     });
@@ -68,6 +79,15 @@ async function update() {
         const leaderHistory = await fetch(`/api/robot/leader/posList`).then(r => r.json());
         const followerHistory = await fetch(`/api/robot/follower/posList`).then(r => r.json())
 
+        const timeStamps = await fetch(`/api/robot/timeStampsList`).then(r => r.json());
+
+        const leaderJointValues = leaderHistory.map(h => h[currentJoint]);
+        const followerJointValues = followerHistory.map(h => h[currentJoint]);
+
+        console.log(timeStamps);
+        console.log(leaderJointValues.length);
+        console.log(timeStamps.length);
+
         set_alarms(leaderState.temp, followerState.temp, leaderState.volt, followerState.volt)
 
         // Machine state anzeigen
@@ -75,15 +95,20 @@ async function update() {
         //updateMachineState(followerMsElement, followerState)
 
         // Chart update
-        const leaderJointValues = leaderHistory.map(h => h[currentJoint]);
-        const followerJointValues = followerHistory.map(h => h[currentJoint]);
+        
 
-        // Labels nur einmal setzen
-        posChart.data.labels = leaderJointValues.map((_, i) => i);
+        
 
         // Beide Kurven setzen
-        posChart.data.datasets[0].data = leaderJointValues;
-        posChart.data.datasets[1].data = followerJointValues;
+        posChart.data.datasets[0].data = leaderHistory.map((h, i) => ({
+            x: timeStamps[i],
+            y: h[currentJoint]
+        }));
+
+        posChart.data.datasets[1].data = followerHistory.map((h, i) => ({
+            x: timeStamps[i],
+            y: h[currentJoint]
+        }));
 
         posChart.update();
 

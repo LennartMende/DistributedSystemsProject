@@ -35,8 +35,13 @@ public class RobotStateController {
         return resolveService(id).currentState();
     }
 
-    @GetMapping("{id}/posList")
+    @GetMapping("/{id}/posList")
     public List<Double[]> posList(@PathVariable String id) {
         return resolveService(id).getPosList();
+    }
+
+    @GetMapping("/timeStampsList")
+    public List<Double> timeStampsList() {
+        return leaderStateService.getTimeStampsList();
     }
 }
