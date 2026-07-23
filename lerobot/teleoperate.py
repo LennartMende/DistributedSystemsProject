@@ -76,7 +76,7 @@ client_id = 'leader_state_publisher'
 clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
 leader_state_publisher = connect_client(clientCfg=clientCfg)
 
-running_dict = {}
+running_dict = {"state" : "RUNNING"}
 stopped_dict = {}
 
 
@@ -84,8 +84,8 @@ def teleop_loop(
     teleop: Teleoperator, robot: Robot, fps: int, display_data: bool = False, duration: float | None = None
 ):
     
-    start = time.perf_counter()
-    publish(leader_state_publisher, leader_state_topic, running_dict)
+    start_time = time.perf_counter()
+    publish(client=leader_state_publisher, topic=leader_state_topic, data=running_dict, start_time=start_time)
 
     while True:
         loop_start = time.perf_counter()
@@ -103,14 +103,14 @@ def teleop_loop(
         leader_volt = teleop.get_voltage()
         follower_volt = robot.get_voltage()
 
-        publish(leader_pos_publisher, leader_pos_topic, leader_pos)
-        publish(follower_pos_publisher, follower_pos_topic, follower_pos)
+        publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
+        publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
 
-        publish(leader_temp_publisher, leader_temp_topic, leader_temp)
-        publish(follower_temp_publisher, follower_temp_topic, follower_temp)
+        publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
+        publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
 
-        publish(leader_volt_publisher, leader_volt_topic, leader_volt)
-        publish(follower_volt_publisher, follower_volt_topic, follower_volt)
+        publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
+        publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
 
         busy_wait(1 / fps - dt_s)
 
@@ -118,7 +118,7 @@ def teleop_loop(
         
         print(f"\ntime: {loop_s * 1e3:.2f}ms ({1 / loop_s:.0f} Hz)")
 
-        if duration is not None and time.perf_counter() - start >= duration:
+        if duration is not None and time.perf_counter() - start_time >= duration:
             return
 
 

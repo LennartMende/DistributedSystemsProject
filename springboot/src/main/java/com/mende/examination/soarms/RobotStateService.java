@@ -8,12 +8,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class RobotStateService {
+    public final String deviceId;
+    private final RobotState state = new RobotState();
+
+    public RobotStateService(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
     private final List<Double[]> posHistory = new ArrayList<>();
-    private final List<Double[]> tempHistory = new ArrayList<>();
-    private final List<Double[]> voltHistory = new ArrayList<>();
+    private final List<Double> timeStampsHistory = new ArrayList<>();
     private int posCounter = 0;
+    private int timeStampsCounter = 0;
     private int tempCounter = 0;
     private int voltCounter = 0;
     private int sampleRate = 10; // sample every 10th message
@@ -41,17 +52,31 @@ public class RobotStateService {
         .map(key -> key + ".volt")
         .toList();
 
-    private final RobotState state = new RobotState();
+
 
     // Positions
     public synchronized List<Double[]> getPosList() {
         return new ArrayList<>(posHistory);
     }
 
-    public synchronized void updatePos(String payload) {
-        Double[] pos = parseDoubleArray(payload, POS_KEYS);
+    public synchronized void updatePos(String positions) {
+        Double[] pos = parseDoubleArray(positions, POS_KEYS);
         state.setPos(pos);
         extendPosHistory(pos);
+    }
+
+    // time stamps
+    public synchronized List<Double> getTimeStampsList() {
+        return new ArrayList<>(timeStampsHistory);
+    }
+
+    private void extendTimeStampsHistory(Double time) {
+        if (timeStampsCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
+            timeStampsHistory.add(time);
+            if (timeStampsHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
+                timeStampsHistory.remove(0);
+            }
+        }
     }
 
     private void extendPosHistory(Double[] pos) {
@@ -64,39 +89,23 @@ public class RobotStateService {
     }
 
     // Temperatures
-    public synchronized List<Double[]> getTempList() {
-        return new ArrayList<>(tempHistory);
-    }
-
     public synchronized void updateTemp(String payload) {
         Double[] temp = parseDoubleArray(payload, TEMP_KEYS);
         state.setTemp(temp);
-        extendTempHistory(temp);
-    }
-
-    private void extendTempHistory(Double[] temp) {
-        if (tempCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
-            tempHistory.add(temp);
-            if (tempHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
-                tempHistory.remove(0);
-            }
-        }
-    }
-
-    private void extendVoltHistory(Double[] volt) {
-        if (voltCounter++ % sampleRate == 0) { // only store every sampleRate-th sample to reduce memory usage
-            voltHistory.add(volt);
-            if (voltHistory.size() > bufferCapacity) { // remove sample if more than bufferCapacity samples
-                voltHistory.remove(0);
-            }
-        }
     }
 
     // Voltages
     public synchronized void updateVolt(String payload) {
         Double[] volt = parseDoubleArray(payload, VOLT_KEYS);
         state.setVolt(volt);
-        extendVoltHistory(volt);
+    }
+
+    // processTimeStamp
+    public synchronized void updateProcessTimeStamp(Double processTimeStamp) {
+        if (processTimeStamp != null) {
+            state.setProcessTimeStamp(processTimeStamp);
+        }
+        extendTimeStampsHistory(processTimeStamp);
     }
 
     // Machine state
@@ -182,6 +191,9 @@ public class RobotStateService {
         }
         if (state.getVolt() != null) {
             copy.setVolt(state.getVolt());
+        }
+        if (state.getProcessTimeStamp() != null) {
+            copy.setProcessTimeStamp(state.getProcessTimeStamp());
         }
         if (state.getMachineState() != null) {
             copy.setMachineState(state.getMachineState());

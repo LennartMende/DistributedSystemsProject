@@ -34,7 +34,7 @@ payload = {"shoulder_pan.temp": 41, "shoulder_lift.temp": 30, "elbow_flex.temp":
 def main():
     clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
     client = utils.connect(clientCfg=clientCfg)
-    utils.publish(client=client, topic=topic, payload=payload)
+    utils.publish(client=client, topic=topic, data=payload, start_time=0)
     client.disconnect()
 
 if __name__ == '__main__':

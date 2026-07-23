@@ -117,10 +117,16 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     }
 
     private void handlePos(RobotStateService service, MqttMessage message) {
-        String payload = new String(message.getPayload());
+        ParsedMessage parsedMessage = new ParsedMessage(new String(message.getPayload()));
         try {
-            service.updatePos(payload);
-            System.out.println("Positions updated: " + payload);
+            if (parsedMessage.deviceId.equals(service.deviceId)) {
+                service.updatePos(parsedMessage.data);
+                service.updateProcessTimeStamp(parsedMessage.processTimeStamp);
+                System.out.println("Positions updated: " + parsedMessage.data +
+                    " at process time " + parsedMessage.processTimeStamp);
+            } else {
+                throw new Exception("Device-IDs don't match!!!");
+            }
         } catch (Exception e) {
             System.err.println("Failed to update positions: " + e.getMessage());
             e.printStackTrace();
@@ -128,21 +134,33 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     }
 
     private void handleTemp(RobotStateService service, MqttMessage message) {
-        String payload = new String(message.getPayload());
+        ParsedMessage parsedMessage = new ParsedMessage(new String(message.getPayload()));
         try {
-            service.updateTemp(payload);
-            System.out.println("Temperatures updated: " + payload);
+            if (parsedMessage.deviceId.equals(service.deviceId)) {
+                service.updateTemp(parsedMessage.data);
+                service.updateProcessTimeStamp(parsedMessage.processTimeStamp);
+                System.out.println("Temperatures updated: " + parsedMessage.data +
+                    " at process time " + parsedMessage.processTimeStamp);
+            } else {
+                throw new Exception("Device-IDs don't match!!!");
+            }
         } catch (Exception e) {
-            System.err.println("Failed to update voltages: " + e.getMessage());
+            System.err.println("Failed to update temperatures: " + e.getMessage());
             e.printStackTrace();
-        }
+        } 
     }
 
     private void handleVolt(RobotStateService service, MqttMessage message) {
-        String payload = new String(message.getPayload());
+        ParsedMessage parsedMessage = new ParsedMessage(new String(message.getPayload()));
         try {
-            service.updateVolt(payload);
-            System.out.println("Voltages updated: " + payload);
+            if (parsedMessage.deviceId.equals(service.deviceId)) {
+                service.updateVolt(parsedMessage.data);
+                service.updateProcessTimeStamp(parsedMessage.processTimeStamp);
+                System.out.println("Voltages updated: " + parsedMessage.data +
+                    " at process time " + parsedMessage.processTimeStamp);
+            } else {
+                throw new Exception("Device-IDs don't match!!!");
+            }
         } catch (Exception e) {
             System.err.println("Failed to update voltages: " + e.getMessage());
             e.printStackTrace();
@@ -150,8 +168,17 @@ public class MqttRobotSubscriber implements ApplicationRunner {
     }
 
     private void handleMachineState(RobotStateService service, MqttMessage message) {
-        String payload = new String(message.getPayload());
-        service.updateMachineState(payload);
-        System.out.println("Machine state updated: " + payload);
+        ParsedMessage parsedMessage = new ParsedMessage(new String(message.getPayload()));
+        try {
+            if (parsedMessage.deviceId.equals(service.deviceId)) {
+                service.updateMachineState(parsedMessage.data);
+                System.out.println("Machine state updated: " + parsedMessage.data);
+            } else {
+                throw new Exception("Device-IDs don't match!!!");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to update machine state: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

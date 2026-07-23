@@ -146,6 +146,13 @@ function selectJoint(jointIndex) {
     posChart.data.datasets[1].label = `Follower joint ${currentJoint} position`;
 }
 
+document.getElementById("joint0").addEventListener("click", () => selectJoint(0));
+document.getElementById("joint1").addEventListener("click", () => selectJoint(1));
+document.getElementById("joint2").addEventListener("click", () => selectJoint(2));
+document.getElementById("joint3").addEventListener("click", () => selectJoint(3));
+document.getElementById("joint4").addEventListener("click", () => selectJoint(4));
+document.getElementById("joint5").addEventListener("click", () => selectJoint(5));
+
 // ---------------------------------------------------------
 // 3. Startlogik
 // ---------------------------------------------------------

@@ -36,26 +36,33 @@ def connect(clientCfg: ClientCfg):
 
 # publishes data on the topic
 def example_publish(client: mqtt_client.Client, topic):
+    phys_quantitiy = topic.split('/', 1)[1]
     msg_count = 1
+    start_time = time.perf_counter()
     while True:
         time.sleep(0.0167)
-        msg = f"messages: {msg_count}"
 
-        pos_dummy_dict = {
-            "shoulder_pan": msg_count,
-            "shoulder_lift": msg_count,
-            "elbow_flex": msg_count,
-            "wrist_flex": msg_count,
-            "wrist_roll": msg_count,
-            "gripper": msg_count
+        dummy_dict = {
+            "shoulder_pan." + phys_quantitiy : msg_count,
+            "shoulder_lift." + phys_quantitiy : msg_count,
+            "elbow_flex." + phys_quantitiy : msg_count,
+            "wrist_flex." + phys_quantitiy : msg_count,
+            "wrist_roll." + phys_quantitiy : msg_count,
+            "gripper." + phys_quantitiy : msg_count
         }
 
-        payload = json.dumps(pos_dummy_dict)
+        payload_dict = {
+            "processTimeStamp" : time.perf_counter() - start_time,
+            "deviceId" : topic.split('/', 1)[0],
+            "data" : dummy_dict
+        }
+
+        payload = json.dumps(payload_dict)
         
         result = client.publish(topic, payload)
         status = result.rc
         if status == 0:
-            print(f"Sent `{msg}` to topic `{topic}`")
+            print(f"Sent `{payload}` to topic `{topic}`")
         else:
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
@@ -63,8 +70,13 @@ def example_publish(client: mqtt_client.Client, topic):
             break
 
 # publishing a custom msg
-def publish(client: mqtt_client.Client, topic, payload: dict):
-    msg: str = json.dumps(payload)
+def publish(client: mqtt_client.Client, topic: str, data: dict, start_time: float):
+    payload_dict = {
+        "processTimeStamp" : time.perf_counter() - start_time,
+        "deviceId" : topic.split('/', 1)[0],
+        "data" : data
+    }
+    msg: str = json.dumps(payload_dict)
     result = client.publish(topic, msg)
     status = result.rc
     if status == 0:
@@ -72,19 +84,16 @@ def publish(client: mqtt_client.Client, topic, payload: dict):
     else:
         print(f"Failed to send message to topic {topic}")
     # msg_count += 1 if extern msg_count is passed as an argument
-    
 
 # subscribe data on the topic
 def subscribe(client: mqtt_client.Client, topic):
     def on_message(client, user_data, msg):
-        # print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        # print(f"Message = {msg}")
         try:
             payload_str = msg.payload.decode("utf-8")
             data = json.loads(payload_str)
-            print("JSON:", data)
+            print(topic, ": ", data)
         except json.JSONDecodeError:
-            print("Received non‑JSON payload:", msg.payload)
+            print("Received non-JSON payload:", msg.payload)
 
     client.subscribe(topic)
     client.on_message = on_message

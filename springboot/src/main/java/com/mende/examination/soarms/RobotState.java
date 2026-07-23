@@ -10,6 +10,8 @@ public class RobotState {
     private String machineState;
     private Instant lastUpdate;
 
+    private Double processTimeStamp;
+
     public RobotState() {
         this.lastUpdate = Instant.EPOCH;
     }
@@ -56,5 +58,14 @@ public class RobotState {
 
     public void setLastUpdate(Instant lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public Double getProcessTimeStamp() {
+        return processTimeStamp;
+    }
+
+    public void setProcessTimeStamp(Double processTimeStamp) {
+        this.processTimeStamp = processTimeStamp;
+        this.lastUpdate = Instant.now();
     }
 }
