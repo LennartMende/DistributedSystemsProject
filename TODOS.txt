@@ -1,8 +1,6 @@
 Aufgaben von Prof. Pretschner unter Extensions:
 • Docker setup for Mosquitto.
 
-• Error-Fallback-Page
-
 weitere eigene Ideen
 • Zertifikate für Publisher und Subscriber
 • eventuell Regler zur Einstellung der Roboter-Pose über Website
