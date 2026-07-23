@@ -1,10 +1,4 @@
-- kurzfristig:
-• Zeitstempel der Teleopdaten
-
-- langfristig:
 Aufgaben von Prof. Pretschner unter Extensions:
-• Multiple device identifiers: IDs in json-Payload
-• Alarm states for threshold violations: Warnhinweis, bspw. visuell
 • Docker setup for Mosquitto.
 
 • Error-Fallback-Page
