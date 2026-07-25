@@ -131,9 +131,68 @@ Es verfügt über die folgenden Technologien:
 - Live‑Update alle 400 ms
 
 
+## Alarm
 
 
-## 4. Projekt starten
+## Historie der Daten
+Da die Positionsdaten der beiden Roboterarme ausschlaggebend für die Regelung sind (Regel- und Führungsgröße) und gleichzeitig eine deutlich schnellere Dynamik aufweisen als Temperatur und Spannung, wird nur die Historie der Positionen aufgezeichnet. Zudem sin Spannung und Temperatur des Follower-Arms im Normalfall auch höher als auf dem Leader-Arm, was einen Vergleich zusätzlich erschweren würde.  
+Die Leader- und Follower-Positionsdaten werden in `ArrayLists` gespeichert. Für das Anfhängen neuer Listenelemente gilt O(1). Außerdem kann Elementzugriff über den Index mit O(1) erfolgen, was für das Plotten hilfreich ist. Lediglich beim Löschen des ältesten Elements wäre die `LinkedList` mit O(1) effizienter.  
+Damit die Operationen möglichst hardwareunabhängig in Echtzeit (die Echtzeitfür die UI wird durch die Aktualisierungsrate des Dashboards vorgegeben) erfolgen können, wird ein Sampling der Werte durchgeführt. Dabei wird nur ein von `sampleRate` Messpunkten gespeichert. Um den RAM nicht zu sehr zu belasten, werden außerdem nur die letzten `buffferCapacity` Messpunkte in der Historie gespeichert. Somit kann mit:  
+bufferCapacity * sampleRate / fps
+berechnet werden, die wie vielen letzten Sekunden aufgenommen werden. Dabei entspricht fps der Abtastrate der Sensorik in 1/s. Wenn der Aufbau bspw. nicht nur zur Live-Daten-Visualisierung, sondern auch zum Training eines maschinellen Lernmodells verwendet werden soll, kann auch die Samplingrate auf 1 gesteigert werden, damit keine Daten verloren gehen.
+
+## Erweitertetes Datenformat für Metadaten -> Zeitstempel und Client-Identifikation
+Zum Datenaustausch zwischen Python-Publishern, Java-Subscribern und der RESTful-API wird das json-Format verwendet, da es deskriptive Schlüssel ermöglicht. Es ist außerdem ein moderner Industriestandard und es gibt Python- und Java-Bibliotheken zum Parsen von json-Daten.  
+Am Anfang des Projekts war der Payload der MQTT-Daten auf die physikalischen Größen reduziert, d. h. ein Python-Publisher hat bspw. das folgende Payload gepublisht:
+
+```python
+{"shoulder_pan": 0.0, "shoulder_lift": 0.0, "elbow_flex": 0.0, "wrist_flex": 0,0, "wrist_roll": 0.0, "gripper": 0.0}
+```
+
+Um zusätzlich Metadaten aufzuzeichnen, wurde dann das folgende Format eingeführt: 
+
+```python
+{"processTimeStamp" : float, "deviceId" : str, "data": s.o.}
+```
+Der `processTimeStamp` ist dabei eine Zeit in Sekunden, die seit dem Systemstart vergangen ist. `deviceId` bezeichnet jedes physikalische Objekt, für das Daten gepublisht werden können. `data` ist wie oben ein String, nur das jetzt zusätzlich die Keys die Endungen `.pos`, `.volt` und `.temp` tragen, um die zugehörige physikalische Größe darzustellen. Somit wird neben der Identifizierung der zugehörigen Maschine auch das Plotten entlang der x-Achse erleichert. Es mussten lediglich die Struktur des Python-MQTT-Publishers verändert werden. Zudem musste im Java-Subscriber ein neues Parsing für die `processTimeStamp` und die `deviceId` eingeführt und das Parsen der physikalischen Größe um eine Ebene tiefer verlegt werden.
+
+## Docker-Setup für Mosquitto
+bei Mosquitto-Installation über apt wird ein System-Daemon installiert. Standardmäßig startet dieser mit dem System und läuft im Hintergrund. Der Status kann mit 
+
+```bash
+systemctl status mosquitto
+```
+
+überprüft werden. Der Daemon kann mit
+```bash
+sudo systemctl stop mosquitto
+```
+
+Zur Verwendung des Docker-Mosquittos muss Port 1883 freigegeben werden. Dafür gibt man:
+```bash
+sudo systemctl disable mosquitto
+```
+in der Command Line ein. Damit startet Mosquitto nicht automatisch beim Boot-Vorgang.  
+Anschließend wechselt man mit in den `mosquitto`-Ordner im Repo, da dieser die `docker-compose.yaml` enthält, die die Instruktionsanweisungen für den folgenden Befehl beinhaltet. Mit dem Befehl
+```bash
+docker compose up -d
+```
+kann nun die Docker-Anwendung gestartet werden. Die Wirkung kann anschließend überprüft werden, indem einer dieser 3 Befehle verwendet wird:
+
+```bash
+ss -tulpn | grep 1883 # systemd-mosquitto muss beendet sein
+docker ps # zeigt Status der laufenden COntainer, bspw. eclipse-mosquitto:2
+docker inspect -f '{{.State.Status}}' mosquitto # Status des Docker-Mosquittos
+```
+Nach der Session kann der Container (und somit der Mosquitto-Server) beendet werden:
+```bash
+docker compose down
+```
+Kurzbeschreibung, wie/ wieso yaml so funktioniert und was die Vorteile sind.
+
+## Zertifikate
+
+## 100. Projekt starten
 1. Ein Terminal öffnen, dort in den `springboot`-Ordner des Repos wechseln und `mvn spring-boot:run` eingeben.
 
 2. Öffne einen Browser. Die REST-Endpoints sind nun unter `localhost:8080/api/robot/state` und `localhost:8080/api/robot/posList` erreichbar, die json-Daten sind einsehbar. Des Weiteren kann mit `localhost:8080/dashboard.html` das Dashboard angezeigtt werden. Es dürften noch keine Positionen, Geschwindigkeiten oder Zustände angeziegt werden.

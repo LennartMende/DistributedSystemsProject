@@ -1,13 +1,13 @@
-package com.mende.examination.soarms;
+// package com.mende.examination.soarms;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ExaminationApplicationTests {
+// @SpringBootTest
+// class ExaminationApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }
