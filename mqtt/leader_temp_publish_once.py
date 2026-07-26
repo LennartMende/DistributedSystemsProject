@@ -14,13 +14,14 @@ import utils
 import json
 
 # setup
-broker = BROKER
-port = PORT
+
 topic = "leader/temp"
 client_id = 'leader_temp_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
-username = USERNAME
-password = PASSWORD
+# broker = BROKER
+# port = PORT
+# username = USERNAME
+# password = PASSWORD
 
 payload = {"shoulder_pan.temp": 5, "shoulder_lift.temp": 5, "elbow_flex.temp": 5, 
                   "wrist_flex.temp": 5, "wrist_roll.temp": 5, "gripper.temp": 5}
@@ -33,7 +34,7 @@ payload = {"shoulder_pan.temp": 15, "shoulder_lift.temp": 30, "elbow_flex.temp":
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     utils.publish(client=client, topic=topic, data=payload, start_time=0)
     client.disconnect()

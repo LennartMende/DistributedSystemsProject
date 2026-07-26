@@ -130,8 +130,11 @@ Es verfügt über die folgenden Technologien:
 - REST‑API‑Integration
 - Live‑Update alle 400 ms
 
+-> Somit kann das gesamte MVC-Konzept mit JS, CSS und HTML abgedeckt werden, wobei sich nur an Daten aus der RESTful API bedient wird. JS stellt somit zusammen mit der REST API den Übergang zwischen dem Backend und dem Frontend dar.
 
 ## Alarm
+Da die Temperaturen und Spannungen der Motoren ausschlaggebende Indikatoren für den Zustand eines Motors sind, wurden Schwellwerte sowohl für die Temperatur als auch für die Spannung eingeführt. Dafür wurde ein Betrieb über 30 min durchgeführt. Af die gemessenen Temperaturwerte wurden 5 °C als Aufschlag für einen Warnhinweis gegeben und 7 °C als Aufschlag für eine kritische Meldung. Ebenfalls beim Unterschreiten um X °C. Da die Spannungn konstant um die Nennwerte bleiben und maximal um +/- 0,1 V schwanken, wurden +/- 5 % als Grenzwerte definiert, also ab 5,3 bzw. unter 4,8 V und unter 11,4 und über 12,6 V.  
+Der Alarm ist innerhalb des JavaScript-Layers implementiert, da somit keine zusätzlichen Daten gepublisht oder subscribet werden müssen, letztendlich muss nur die Verarbeitungslogik auf Basis der von der RESTful API gewonnen (gegetteten) Daten gewonnen. 
 
 
 ## Historie der Daten
@@ -180,7 +183,7 @@ docker compose up -d
 kann nun die Docker-Anwendung gestartet werden. Die Wirkung kann anschließend überprüft werden, indem einer dieser 3 Befehle verwendet wird:
 
 ```bash
-ss -tulpn | grep 1883 # systemd-mosquitto muss beendet sein
+ss -tulpn | grep 1883 # bzw. 8883 für TLS, systemd-mosquitto muss beendet sein 
 docker ps # zeigt Status der laufenden COntainer, bspw. eclipse-mosquitto:2
 docker inspect -f '{{.State.Status}}' mosquitto # Status des Docker-Mosquittos
 ```
@@ -191,6 +194,49 @@ docker compose down
 Kurzbeschreibung, wie/ wieso yaml so funktioniert und was die Vorteile sind.
 
 ## Zertifikate
+-> Warum Zertifikate?
+-> Wer besitzt welche zertifikate?
+-> Wie habe ich die Zertifikate erstelle? In welchem Ordner liegen die Zertifikate?
+-> Port-Änderung: 1883 -> 8883
+-> Wer erstellt die Zertifikate bzw. wer verwaltet und verteilt diese?
+-> Was muss dafür in Java und Python geändert werden?
+
+Die Zertifikate wurden so erstellt:
+1. für Client: client_java_subscriber:
+openssl genrsa -out client_java_subscriber.key 2048
+ 1869  openssl req -new     -key client_java_subscriber.key     -out client_java_subscriber.csr     -subj "/CN=java_subscriber"
+ 1870  openssl x509 -req     -in client_java_subscriber.csr     -CA ca.crt     -CAkey ca.key     -CAcreateserial     -out client_java_subscriber.crt     -days 365     -sha256
+ 1871  openssl pkcs12 -export     -inkey client_java_subscriber.key     -in client_java_subscriber.crt     -certfile ca.crt     -out client_java_subscriber.p12     -password pass:123456
+ 1872  keytool -importcert     -alias myca     -file ca.crt     -keystore truststore.p12     -storetype PKCS12     -storepass 123456     -noprompt
+ 1873  ss -tulpn | grep 8883
+2. für server:
+lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl genrsa -out server.key 2048
+lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl req \
+-new \
+-key server.key \
+-out server.csr \
+-subj "/CN=localhost"
+lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl x509 -req \
+-in server.csr \
+-CA ca.crt \
+-CAkey ca.key \
+-CAcreateserial \
+-out server.crt \
+-days 365 \
+-sha256
+Certificate request self-signature ok
+subject=CN = localhost
+lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl x509 -in server.crt -issuer -subject -noout
+issuer=C = DE, ST = Saxony, L = Leipzig, O = HTWK, OU = HTWK-Robos, CN = Mende, emailAddress = lennart.mende@stud.htwk-leipzig.de
+subject=CN = localhost
+
+san.cnf:
+openssl req -new -nodes -x509   -days 365   -keyout server.key   -out server.crt   -config san.cnf
+-> Was macht man damit/ Was bringt der Befehl?
+
+-> Was sind Keystore und Truststore?
+...
+Da sie mit root/ lennart/ user auf dem Host erstellt wurden, hat der Mosquitto-Docker keinen Zugriff (Permission denied), da er als user mosquitto ist. Daher muss erst in der Ordner `DistributedSystemsProject/mosquitto/certs` gewechselt werden. Dort wird 
 
 ## 100. Projekt starten
 1. Ein Terminal öffnen, dort in den `springboot`-Ordner des Repos wechseln und `mvn spring-boot:run` eingeben.

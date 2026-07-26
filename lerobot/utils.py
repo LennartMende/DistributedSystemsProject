@@ -3,14 +3,27 @@ import time
 from paho.mqtt import client as mqtt_client
 import json
 
+from constants import PORT, BROKER, USERNAME, PASSWORD
+
 
 @dataclass
 class ClientCfg:
     client_id: str
-    port: int
-    broker: str
-    username: str
-    password: str
+    port: int = PORT
+    broker: str = BROKER
+    
+    # Username + password:
+    # username: str = USERNAME
+    # password: str = PASSWORD
+
+    # TLS:
+    ca: str = "../certs/ca.crt" # for tls
+    @property
+    def cert(self) -> str:
+        return f"../certs/client_{self.client_id}.crt"
+    @property
+    def key(self) -> str:
+        return f"../certs/client_{self.client_id}.key"
 
 
 # connect a clientwith the broker
@@ -22,14 +35,14 @@ def connect(clientCfg: ClientCfg):
             print(f"Failed to connect, return code {rc}")
 
     client = mqtt_client.Client(client_id=clientCfg.client_id)
-    client.username_pw_set(clientCfg.username, clientCfg.password)
+    # client.username_pw_set(clientCfg.username, clientCfg.password) # for username + password
     # secure MQTT:
-    # client.tls_set(
-    #     ca_certs="../certs/ca.crt",
-    #     certfile=f"../certs/client_{clientCfg.client_id}.crt",
-    #     keyfile=f"../certs/client_{clientCfg.client_id}.key"
-    # )
-    # client.tls_insecure_set(False)
+    client.tls_set(
+        ca_certs="../certs/ca.crt",
+        certfile=f"../certs/client_{clientCfg.client_id}.crt",
+        keyfile=f"../certs/client_{clientCfg.client_id}.key"
+    )
+    client.tls_insecure_set(False)
     client.on_connect = on_connect
     client.connect(clientCfg.broker, clientCfg.port)
     return client

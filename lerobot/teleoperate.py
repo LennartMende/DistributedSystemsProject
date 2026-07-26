@@ -14,7 +14,7 @@ from lerobot.common.teleoperators import Teleoperator, TeleoperatorConfig,make_t
 from lerobot.common.utils.robot_utils import busy_wait
 from lerobot.common.utils.utils import init_logging
 
-from lerobot.constants import REST_POSE, BROKER, PORT, USERNAME, PASSWORD
+from lerobot.constants import REST_POSE#, BROKER, PORT, USERNAME, PASSWORD
 from lerobot.utils import ClientCfg, publish
 from lerobot.utils import connect as connect_client
 from lerobot.motor_read_write import set_rest_pose
@@ -40,44 +40,41 @@ class TeleoperateConfig:
 # positions
 follower_pos_topic = "follower/pos"
 client_id = 'follower_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 follower_pos_publisher = connect_client(clientCfg=clientCfg)
 
 leader_pos_topic = "leader/pos"
 client_id = 'leader_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 leader_pos_publisher = connect_client(clientCfg=clientCfg)
 
 # temperatures
 follower_temp_topic = "follower/temp"
 client_id = 'follower_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 follower_temp_publisher = connect_client(clientCfg=clientCfg)
 
 leader_temp_topic = "leader/temp"
 client_id = 'leader_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 leader_temp_publisher = connect_client(clientCfg=clientCfg)
 
 # voltages
 follower_volt_topic = "follower/volt"
 client_id = 'follower_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 follower_volt_publisher = connect_client(clientCfg=clientCfg)
 
 leader_volt_topic = "leader/volt"
 client_id = 'leader_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
+clientCfg = ClientCfg(client_id=client_id)
 leader_volt_publisher = connect_client(clientCfg=clientCfg)
 
 # state
-leader_state_topic = "leader/state"
+system_state_topic = "system/state"
 client_id = 'leader_state_publisher'
-clientCfg = ClientCfg(client_id=client_id, port=PORT, broker=BROKER, username=USERNAME, password=PASSWORD)
-leader_state_publisher = connect_client(clientCfg=clientCfg)
-
-running_dict = {"state" : "RUNNING"}
-stopped_dict = {}
+clientCfg = ClientCfg(client_id=client_id)
+system_state_publisher = connect_client(clientCfg=clientCfg)
 
 
 def teleop_loop(
@@ -85,7 +82,6 @@ def teleop_loop(
 ):
     
     start_time = time.perf_counter()
-    publish(client=leader_state_publisher, topic=leader_state_topic, data=running_dict, start_time=start_time)
 
     while True:
         loop_start = time.perf_counter()
@@ -135,11 +131,12 @@ def teleoperate(cfg: TeleoperateConfig):
     robot.connect()
 
     print("CONNECTED", flush=True)
+    publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RESETTING"}, start_time=time.perf_counter())
  
     set_rest_pose(teleop=teleop, robot=robot, rest_pose=REST_POSE, fps=cfg.fps)
 
     print("READY", flush=True)
-
+    publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RUNNING"}, start_time=time.perf_counter())
     try:
         teleop_loop(teleop, robot, cfg.fps, display_data=cfg.display_data, duration=cfg.teleop_time_s)
     except KeyboardInterrupt:

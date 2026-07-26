@@ -14,13 +14,13 @@ import utils
 import json
 
 # setup
-broker = BROKER
-port = PORT
 topic = "follower/temp"
 client_id = 'follower_temp_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
-username = USERNAME
-password = PASSWORD
+# broker = BROKER
+# port = PORT
+# username = USERNAME
+# password = PASSWORD
 
 
 # temp_dummy_dict = {"shoulder_pan.temp": 0, "shoulder_lift.temp": 0, "elbow_flex.temp": 0, 
@@ -30,7 +30,7 @@ password = PASSWORD
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
     utils.example_publish(client=client, topic=topic)

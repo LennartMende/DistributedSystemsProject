@@ -14,13 +14,13 @@ import utils
 import json
 
 # setup
-broker = BROKER
-port = PORT
 topic = "leader/volt"
 client_id = 'leader_volt_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
-username = USERNAME
-password = PASSWORD
+# broker = BROKER
+# port = PORT
+# username = USERNAME
+# password = PASSWORD
 
 
 volt_dummy_dict = {"shoulder_pan.volt": 0, "shoulder_lift.volt": 0, "elbow_flex.volt": 0, 
@@ -30,7 +30,7 @@ payload = json.dumps(volt_dummy_dict)
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
     utils.example_publish(client=client, topic=topic)

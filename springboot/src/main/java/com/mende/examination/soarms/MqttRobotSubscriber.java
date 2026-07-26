@@ -1,5 +1,8 @@
 package com.mende.examination.soarms;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -52,6 +55,8 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         this.followerStateService = followerStateService;
     }
 
+    
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         MqttClient client = new MqttClient(
@@ -62,8 +67,24 @@ public class MqttRobotSubscriber implements ApplicationRunner {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
-        options.setUserName("username");
-        options.setPassword("password".toCharArray());
+
+        // username + password:
+        // options.setUserName("username");
+        // options.setPassword("password".toCharArray());
+
+        // TLS
+        
+        options.setSocketFactory(
+            SslUtil.getSocketFactory(
+            "../mosquitto/certs/truststore.p12",              // CA (Truststore)
+            "123456",                               // Truststore-Passwort
+            "../mosquitto/certs/client_java_subscriber.p12",  // Client-Zertifikat (Keystore)
+            "123456"                                  // Keystore-Passwort
+            )
+        );
+        System.setProperty("javax.net.ssl.trustStore", "../mosquitto/certs/truststore.p12");
+        System.setProperty("javax.net.ssl.trustStorePassword", "123456");
+
 
 
         client.connect(options);

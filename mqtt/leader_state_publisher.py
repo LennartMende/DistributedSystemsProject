@@ -14,13 +14,13 @@ import utils
 import json
 
 # setup
-broker = BROKER
-port = PORT
 topic = "leader/state"
 client_id = 'leader_state_publisher'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
-username = USERNAME
-password = PASSWORD
+# broker = BROKER
+# port = PORT
+# username = USERNAME
+# password = PASSWORD
 
 
 state_dummy_dict = {"state": "READY"}
@@ -29,10 +29,10 @@ payload = json.dumps(state_dummy_dict)
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
-    utils.publish(client=client, topic=topic, payload=state_dummy_dict)
+    utils.publish(client=client, topic=topic, data=state_dummy_dict, start_time = 0)
     client.disconnect()
 
 if __name__ == '__main__':

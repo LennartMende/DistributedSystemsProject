@@ -99,7 +99,10 @@ function updateMachineState(msElement, state) {
     // Machine state anzeigen
     msElement.innerText = state.machineState;
 
-    if (state.machineState === "RUNNING") {
+    if (state.machineState === "RUNNING" || 
+        state.machineState === "RESETTING" ||
+        state.machineState === "RECORDING" ||
+        state.machineState === "RESETTING") {
         msElement.className = "value status-running";
     } else if (state.machineState === "READY") {
         msElement.className = "value status-ready";

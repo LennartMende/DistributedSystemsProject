@@ -14,11 +14,11 @@ import utils
 import json
 
 # setup
+topic = "leader/pos"
+client_id = 'leader_pos_publisher'
+# client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 broker = BROKER
 port = PORT
-topic = "follower/pos"
-client_id = 'follower_pos_publisher'
-# client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
 username = USERNAME
 password = PASSWORD
 
@@ -29,7 +29,7 @@ payload = json.dumps(pos_dummy_dict)
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     client.loop_start()
     utils.example_publish(client=client, topic=topic)

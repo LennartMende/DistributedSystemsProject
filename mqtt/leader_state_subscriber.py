@@ -15,17 +15,17 @@ import utils
 print(utils.__file__)
 
 # setup
-broker = BROKER
-port = PORT
 topic = "leader/state"
 client_id = 'leader_state_subscriber'
 # client_id = f'python-mqtt-{random.randint(0,1000)}' for random id
-username = USERNAME
-password = PASSWORD
+# broker = BROKER
+# port = PORT
+# username = USERNAME
+# password = PASSWORD
 
 
 def main():
-    clientCfg = utils.ClientCfg(client_id=client_id, port=port, broker=broker, username=username, password=password)
+    clientCfg = utils.ClientCfg(client_id=client_id)
     client = utils.connect(clientCfg=clientCfg)
     utils.subscribe(client=client, topic=topic)
     client.loop_forever()
