@@ -5,6 +5,8 @@ let currentFollowerVoltAlarmId = 0;
 
 let sumOfAlarms = 0;
 
+let initialized = false;
+
 export const alarmElementList = ".leader-temp-critical, .leader-temp-warn, .leader-volt-critical, \
                  .follower-temp-warn, .follower-temp-critical, .follower-volt-critical"
 
@@ -354,7 +356,7 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
     setAlarmPositions(leaderTempAlarmElement,
         leaderVoltAlarmElement,
         followerTempAlarmElement,
-        followerVoltAlarmElement)
+        followerVoltAlarmElement);
 }
 
 
@@ -394,12 +396,14 @@ function setAlarmPositions(leaderTempAlarmElement,
     leaderVoltAlarmElement,
     followerTempAlarmElement,
     followerVoltAlarmElement) {
+    console.log("setAlarmPositions()");
     [
         leaderTempAlarmElement,
         leaderVoltAlarmElement,
         followerTempAlarmElement,
         followerVoltAlarmElement
     ].forEach(e => {
+        e.style.display = "none";
         e.style.top = "";
     });
     const alarms = [
@@ -408,11 +412,25 @@ function setAlarmPositions(leaderTempAlarmElement,
         {id: currentFollowerTempAlarmId, element: followerTempAlarmElement},
         {id: currentFollowerVoltAlarmId, element: followerVoltAlarmElement}
     ];
+    console.log([
+        { name: "leaderTemp", id: currentLeaderTempAlarmId },
+        { name: "leaderVolt", id: currentLeaderVoltAlarmId },
+        { name: "followerTemp", id: currentFollowerTempAlarmId },
+        { name: "followerVolt", id: currentFollowerVoltAlarmId },
+    ]);
+
+    // DEBUG:
+    console.log(
+        leaderTempAlarmElement,
+        leaderVoltAlarmElement,
+        followerTempAlarmElement,
+        followerVoltAlarmElement
+    );
     const activeAlarms = alarms.filter(a => a.id !== 0);
     activeAlarms.sort((a, b) => b.id - a.id);
     for (let i = 0; i < activeAlarms.length; i++) {
         if (i < 4) {
-            activeAlarms[i].element.style.top = `${600 - i * 80}px`;
+            activeAlarms[i].element.style.top = `${500 + i * 80}px`;
             activeAlarms[i].element.style.display = "block";
         } else {
             activeAlarms[i].element.innerText = "";

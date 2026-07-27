@@ -23,8 +23,7 @@ client_id = 'leader_temp_publisher'
 # username = USERNAME
 # password = PASSWORD
 
-payload = {"shoulder_pan.temp": 5, "shoulder_lift.temp": 5, "elbow_flex.temp": 5, 
-                  "wrist_flex.temp": 5, "wrist_roll.temp": 5, "gripper.temp": 5}
+
 payload = {"shoulder_pan.temp": 41, "shoulder_lift.temp": 30, "elbow_flex.temp": 30, 
                   "wrist_flex.temp": 30, "wrist_roll.temp": 30, "gripper.temp": 30}
 # temp_dummy_dict = {"shoulder_pan.temp": 5, "shoulder_lift.temp": 5, "elbow_flex.temp": 5, 

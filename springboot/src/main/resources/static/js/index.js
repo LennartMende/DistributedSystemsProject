@@ -3,6 +3,8 @@ import {
     ALARM
 } from "./alarm.js";
 
+let serverWasDown = false;
+let reloadDone = false;
 
 const leaderMsElement = document.getElementById("leaderMachineState");
 
@@ -38,6 +40,20 @@ const followerVoltElements = [document.getElementById("follower_volt_joint0"), d
     document.getElementById("follower_volt_joint2"), document.getElementById("follower_volt_joint3"),
     document.getElementById("follower_volt_joint4"), document.getElementById("follower_volt_joint5")
 ];
+
+async function checkServerRestart() {
+    try {
+        const response = await fetch("/api/health");
+
+        if (response.ok && serverWasDown && !reloadDone) {
+            reloadDone = true;
+            location.reload();
+        }
+
+    } catch (err) {
+        serverWasDown = true;
+    }
+}
 
 async function update() {
     try {
@@ -176,3 +192,4 @@ function updateElementValuesAndColors(leaderState, followerState) {
 //updateMachineState(leaderMsElement, "UNKNOWN")
 update();               // einmaliger Start
 setInterval(update, 400);  // alle 400 ms aktualisieren
+setInterval(checkServerRestart, 1000);

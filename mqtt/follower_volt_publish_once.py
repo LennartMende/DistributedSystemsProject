@@ -22,8 +22,8 @@ client_id = 'follower_volt_publisher'
 # username = USERNAME
 # password = PASSWORD
 
-payload = {"shoulder_pan.volt": 12, "shoulder_lift.volt": 12, "elbow_flex.volt": 12, 
-                  "wrist_flex.volt": 12, "wrist_roll.volt": 12, "gripper.volt": 11}
+payload = {"shoulder_pan.volt": 11, "shoulder_lift.volt": 12, "elbow_flex.volt": 12, 
+                  "wrist_flex.volt": 12, "wrist_roll.volt": 12, "gripper.volt": 12}
 
 # volt_dummy_dict = {"shoulder_pan.volt": 5, "shoulder_lift.volt": 5, "elbow_flex.volt": 5, 
 #                   "wrist_flex.volt": 5, "wrist_roll.volt": 5, "gripper.volt": 5}
