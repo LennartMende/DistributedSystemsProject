@@ -235,8 +235,47 @@ openssl req -new -nodes -x509   -days 365   -keyout server.key   -out server.crt
 -> Was macht man damit/ Was bringt der Befehl?
 
 -> Was sind Keystore und Truststore?
+
+Die Zertifikate für die Python-Clients können mithilfe des Shell-SKripts `create_certs.sh` generiert werden. Dabei wird über die beiden Arme `arm`, die physikalische Größe `quantity` und die Art des MQTT-Clients `client` iteriert. Somit kann für jeden Client ein angepasstes Zertifikat erzeugt werden. Für die Erzeugung an sich werden dann drei Schritte durchlaufen:
+1. Befehl:
+```bash
+openssl genrsa -out "${NAME}.key" 4096
+```  
+2. Befehl:  
+```bash
+openssl req \
+                -new \
+                -key "${NAME}.key" \
+                -out "${NAME}.csr" \
+                -config client.conf \
+                -subj "/CN=${arm}_${quantity}_${client}"
+```  
+3. Befehl:  
+```bash
+openssl x509 \
+                -req \
+                -in "${NAME}.csr" \
+                -CA ca.crt \
+                -CAkey ca.key \
+                -CAcreateserial \
+                -out "${NAME}.crt" \
+                -days 3650 \
+                -sha256
+```  
+Ausführung:
+ 1939  cd ../certs/
+ 1940  chmod +x create_certs.sh
+ 1941  ./create_certs.sh
+ -> Erst in certs-Ordner wechseln, dann das Shell-Skript ausführbar machen und anschließend ausführen.
 ...
 Da sie mit root/ lennart/ user auf dem Host erstellt wurden, hat der Mosquitto-Docker keinen Zugriff (Permission denied), da er als user mosquitto ist. Daher muss erst in der Ordner `DistributedSystemsProject/mosquitto/certs` gewechselt werden. Dort wird 
+
+
+## Weiterhin grundsätzliche Fragen
+### Was macht Maven?
+### Was ist Springboots Zuständigkeit?
+### Wie wird tomcat automatisch gestartet? Was wird automatisch gemacht
+### Erläuterung mit Mosquitto-Systemd und Docker-Mosquitto
 
 ## 100. Projekt starten
 1. Ein Terminal öffnen, dort in den `springboot`-Ordner des Repos wechseln und `mvn spring-boot:run` eingeben.

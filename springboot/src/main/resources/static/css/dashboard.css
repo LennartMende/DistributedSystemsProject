@@ -233,64 +233,64 @@ td {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #eeff00;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
 
 .leader-temp-critical {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #ff0000;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
 
 .leader-volt-critical {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #ff0000;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
 
 .follower-temp-warn {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #eeff00;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
 
 .follower-temp-critical {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #ff0000;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
 
 .follower-volt-critical {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
     color: #ff0000;
     z-index: 2147483647;
-    min-width: 80vw;
+    min-width: 90vw;
 }
