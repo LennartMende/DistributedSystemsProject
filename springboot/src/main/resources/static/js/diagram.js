@@ -45,6 +45,15 @@ if (chartCanvas && typeof Chart !== 'undefined') {
         },
         options: {
             animation: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 22
+                        }
+                    }
+                }
+            },
             scales: {
                 x: {
                     type: 'linear',
