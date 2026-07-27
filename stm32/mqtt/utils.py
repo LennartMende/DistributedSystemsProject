@@ -4,7 +4,7 @@ import time
 from paho.mqtt import client as mqtt_client
 import json
 
-from constants import PORT, BROKER#, USERNAME, PASSWORD
+from constants import PORT, BROKER, USERNAME, PASSWORD
 
 CERTS_DIR = Path(__file__).resolve().parent.parent / "certs"
 

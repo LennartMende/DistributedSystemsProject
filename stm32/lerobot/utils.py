@@ -1,12 +1,9 @@
 from dataclasses import dataclass
-from pathlib import Path
 import time
 from paho.mqtt import client as mqtt_client
 import json
 
-from constants import PORT, BROKER#, USERNAME, PASSWORD
-
-CERTS_DIR = Path(__file__).resolve().parent.parent / "certs"
+from constants import PORT, BROKER, USERNAME, PASSWORD
 
 
 @dataclass
@@ -20,13 +17,13 @@ class ClientCfg:
     # password: str = PASSWORD
 
     # TLS:
-    ca: str = str(CERTS_DIR / "ca.crt")
+    ca: str = "../certs/ca.crt" # for tls
     @property
     def cert(self) -> str:
-        return str(CERTS_DIR / f"client_{self.client_id}.crt")
+        return f"../certs/client_{self.client_id}.crt"
     @property
     def key(self) -> str:
-        return str(CERTS_DIR / f"client_{self.client_id}.key")
+        return f"../certs/client_{self.client_id}.key"
 
 
 # connect a clientwith the broker
@@ -40,17 +37,10 @@ def connect(clientCfg: ClientCfg):
     client = mqtt_client.Client(client_id=clientCfg.client_id)
     # client.username_pw_set(clientCfg.username, clientCfg.password) # for username + password
     # secure MQTT:
-    ca_path = Path(clientCfg.ca)
-    cert_path = Path(clientCfg.cert)
-    key_path = Path(clientCfg.key)
-    missing_files = [str(path) for path in (ca_path, cert_path, key_path) if not path.exists()]
-    if missing_files:
-        raise FileNotFoundError(f"Missing MQTT TLS files: {missing_files}")
-
     client.tls_set(
-        ca_certs=str(ca_path),
-        certfile=str(cert_path),
-        keyfile=str(key_path)
+        ca_certs="../certs/ca.crt",
+        certfile=f"../certs/client_{clientCfg.client_id}.crt",
+        keyfile=f"../certs/client_{clientCfg.client_id}.key"
     )
     client.tls_insecure_set(False)
     client.on_connect = on_connect

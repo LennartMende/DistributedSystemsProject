@@ -209,7 +209,7 @@ openssl genrsa -out client_java_subscriber.key 2048
  1871  openssl pkcs12 -export     -inkey client_java_subscriber.key     -in client_java_subscriber.crt     -certfile ca.crt     -out client_java_subscriber.p12     -password pass:123456
  1872  keytool -importcert     -alias myca     -file ca.crt     -keystore truststore.p12     -storetype PKCS12     -storepass 123456     -noprompt
  1873  ss -tulpn | grep 8883
-2. für server:
+2. für localhost-Server:
 lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl genrsa -out server.key 2048
 lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl req \
 -new \
@@ -229,6 +229,27 @@ subject=CN = localhost
 lennart@lennart-ubuntu:~/2.Semester/VerteilteSysteme/DistributedSystemsProject/mosquitto/certs$ openssl x509 -in server.crt -issuer -subject -noout
 issuer=C = DE, ST = Saxony, L = Leipzig, O = HTWK, OU = HTWK-Robos, CN = Mende, emailAddress = lennart.mende@stud.htwk-leipzig.de
 subject=CN = localhost
+3. Zertifikate für Server auf 192.168.7.17:
+- server_san_7_27.cnf angelegt
+- privaten Schlüssel für Server erzeugt: openssl genrsa -out server_7_27.key 2048
+- CSR erzeugen:
+openssl req \
+  -new \
+  -key server_7_27.key \
+  -out server_7_27.csr \
+  -config server_san_7_27.cnf
+- Signatur mit:
+openssl x509 -req \
+  -in server_7_27.csr \
+  -CA ca.crt \
+  -CAkey ca.key \
+  -CAcreateserial \
+  -out server_7_27.crt \
+  -days 365 \
+  -extensions req_ext \
+  -extfile server_san_7_27.cnf
+
+
 
 san.cnf:
 openssl req -new -nodes -x509   -days 365   -keyout server.key   -out server.crt   -config san.cnf
