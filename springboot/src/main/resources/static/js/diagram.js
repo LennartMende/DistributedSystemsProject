@@ -3,7 +3,11 @@
 // ---------------------------------------------------------
 import {
     set_alarms,
+    ALARM
 } from "./alarm.js";
+
+let serverWasDown = false;
+let reloadDone = false;
 
 // ---------------------------------------------------------
 // 1. Initialisierung
@@ -117,6 +121,20 @@ async function update() {
     }
 }
 
+async function checkServerRestart() {
+    try {
+        const response = await fetch("/api/health");
+
+        if (response.ok && serverWasDown && !reloadDone) {
+            reloadDone = true;
+            location.reload();
+        }
+
+    } catch (err) {
+        serverWasDown = true;
+    }
+}
+
 function updateMachineState(msElement, state) {
     if (!msElement || !state.machineState || state.machineState==="UNKNOWN") {
         msElement.innerText = "STATE UNKNOWN";
@@ -184,3 +202,4 @@ document.getElementById("joint5").addEventListener("click", () => selectJoint(5)
 
 update();               // einmaliger Start
 setInterval(update, 400);  // alle 400 ms aktualisieren
+setInterval(checkServerRestart, 1000);

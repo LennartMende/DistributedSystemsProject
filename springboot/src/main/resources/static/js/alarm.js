@@ -5,7 +5,6 @@ let currentFollowerVoltAlarmId = 0;
 
 let sumOfAlarms = 0;
 
-let initialized = false;
 
 export const alarmElementList = ".leader-temp-critical, .leader-temp-warn, .leader-volt-critical, \
                  .follower-temp-warn, .follower-temp-critical, .follower-volt-critical"
