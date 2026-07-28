@@ -24,11 +24,13 @@ public class WebControlController {
     }
 
     @PostMapping("/control")
-    public ResponseEntity<Void> postControl(@RequestBody String body) {
+    public ResponseEntity<Void> postControl(@RequestBody String body) throws Exception {
 
         lastMessage = body;
         
-        System.out.println(body);
+        // System.out.println("control" + ": " + body);
+
+        publisher.publish(body);
 
         return ResponseEntity.ok().build();
     }

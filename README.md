@@ -312,7 +312,8 @@ openssl pkcs12 -export \
 - TRUSTSTORE: enthält vertrauenswürdige CAs
 - KEYSTORE: enthält private Key und CLient-Zertifikat eines Clients
 
-## Weiterhin grundsätzliche Fragen
+- bei Java-Publisher MqttRobotPublisher.java: Lifecycle geändert (kein public void run(ApplicationArguments args) und auch keine Implementierung des ApplicationRunner-Interfaces mehr), damit erst Connection vollständig durchlaufen kann und erst dann auch tatsächlich gepublisht wird, da sonst Connection zu langsam und somit waren sonst erste Publish-Befehle ungültig, da noch keine Verbindung bestand
+### Weiterhin grundsätzliche Fragen
 ### Was macht Maven?
 ### Was ist Springboots Zuständigkeit?
 ### Wie wird tomcat automatisch gestartet? Was wird automatisch gemacht

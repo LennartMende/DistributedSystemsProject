@@ -15,7 +15,7 @@ from lerobot.common.utils.robot_utils import busy_wait
 from lerobot.common.utils.utils import init_logging
 
 from lerobot.constants import REST_POSE#, BROKER, PORT, USERNAME, PASSWORD
-from lerobot.utils import ClientCfg, publish
+from lerobot.utils import ClientCfg, subscribe_in_thread, State, publish
 from lerobot.utils import connect as connect_client
 from lerobot.motor_read_write import set_rest_pose
 
@@ -36,39 +36,11 @@ class TeleoperateConfig:
     display_data: bool = False
 
 
-# create clients
-# positions
-follower_pos_topic = "follower/pos"
-client_id = 'follower_pos_publisher'
+# create subscribing client
+system_state_topic = "control"
+client_id = 'control_subscriber'
 clientCfg = ClientCfg(client_id=client_id)
-follower_pos_publisher = connect_client(clientCfg=clientCfg)
-
-leader_pos_topic = "leader/pos"
-client_id = 'leader_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_pos_publisher = connect_client(clientCfg=clientCfg)
-
-# temperatures
-follower_temp_topic = "follower/temp"
-client_id = 'follower_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_temp_publisher = connect_client(clientCfg=clientCfg)
-
-leader_temp_topic = "leader/temp"
-client_id = 'leader_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_temp_publisher = connect_client(clientCfg=clientCfg)
-
-# voltages
-follower_volt_topic = "follower/volt"
-client_id = 'follower_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_volt_publisher = connect_client(clientCfg=clientCfg)
-
-leader_volt_topic = "leader/volt"
-client_id = 'leader_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_volt_publisher = connect_client(clientCfg=clientCfg)
+system_state_publisher = connect_client(clientCfg=clientCfg)
 
 # state
 system_state_topic = "system/state"
@@ -76,37 +48,23 @@ client_id = 'leader_state_publisher'
 clientCfg = ClientCfg(client_id=client_id)
 system_state_publisher = connect_client(clientCfg=clientCfg)
 
+state: State = State()
+
 
 def teleop_loop(
     teleop: Teleoperator, robot: Robot, fps: int, display_data: bool = False, duration: float | None = None
 ):
-    system_state_publisher.
+    
+    subscribe_in_thread(client=system_state_publisher, topic=system_state_topic, state=state)
+
     start_time = time.perf_counter()
 
     while True:
         loop_start = time.perf_counter()
-        action = teleop.get_action()
+        action = state.data
 
         robot.send_action(action)
         dt_s = time.perf_counter() - loop_start
-
-        leader_pos = teleop.get_action()
-        follower_pos = robot.get_observation()
-
-        leader_temp = teleop.get_temperature()
-        follower_temp = robot.get_temperature()
-
-        leader_volt = teleop.get_voltage()
-        follower_volt = robot.get_voltage()
-
-        publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
-        publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
-
-        publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
-        publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
-
-        publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
-        publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
 
         busy_wait(1 / fps - dt_s)
 
