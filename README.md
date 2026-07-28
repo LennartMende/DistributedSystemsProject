@@ -289,14 +289,38 @@ Ausführung:
  1941  ./create_certs.sh
  -> Erst in certs-Ordner wechseln, dann das Shell-Skript ausführbar machen und anschließend ausführen.
 ...
+
+Java:
+
+
 Da sie mit root/ lennart/ user auf dem Host erstellt wurden, hat der Mosquitto-Docker keinen Zugriff (Permission denied), da er als user mosquitto ist. Daher muss erst in der Ordner `DistributedSystemsProject/mosquitto/certs` gewechselt werden. Dort wird 
 
+
+### Erweiterung um control:
+-> Zertifikate:
+cd certs && chmod +x create_java_pub_control_sub_certs.sh
+./create_java_pub_control_sub_certs.sh
+
+-> Erzeugung der PCKS#12-Datei:
+openssl pkcs12 -export \
+    -inkey client_java_publisher.key \
+    -in client_java_publisher.crt \
+    -certfile ca.crt \
+    -out client_java_publisher.p12 \
+    -password pass:123456
+ 
+- TRUSTSTORE: enthält vertrauenswürdige CAs
+- KEYSTORE: enthält private Key und CLient-Zertifikat eines Clients
 
 ## Weiterhin grundsätzliche Fragen
 ### Was macht Maven?
 ### Was ist Springboots Zuständigkeit?
 ### Wie wird tomcat automatisch gestartet? Was wird automatisch gemacht
 ### Erläuterung mit Mosquitto-Systemd und Docker-Mosquitto
+
+
+## Control
+Html + CSS/ JS: MVC -> POST auf HTTP 192.168.7.27 -> RESTful API -> Python-GET auf 192.168.7.1 über 192.168.7.27
 
 ## 100. Projekt starten
 1. Ein Terminal öffnen, dort in den `springboot`-Ordner des Repos wechseln und `mvn spring-boot:run` eingeben.
