@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+openssl genrsa -out server_7_27.key 4096
+
+openssl req \
+    -new \
+    -key server_7_27.key \
+    -out server_7_27.csr \
+    -config san_7_27.cnf
+
+openssl x509 \
+    -req \
+    -in server_7_27.csr \
+    -CA ca.crt \
+    -CAkey ca.key \
+    -CAcreateserial \
+    -out server_7_27.crt \
+    -days 7300 \
+    -sha256 \
+    -extensions req_ext \
+    -extfile san_7_27.cnf
+
+rm server_7_27.csr
