@@ -5,11 +5,15 @@ import json
 
 from constants import PORT, BROKER, USERNAME, PASSWORD
 
+
 # State class for concurrent processing
 class State:
-    message: str | None
-    def __init__(self):
-        self.message = None
+    data: dict[str, int | float] | None
+
+    def __init__(self, data_str: str="data"):
+        self.data = None
+        self.data_str = data_str # data_str := field which contains real data, not meta data
+
 
 @dataclass
 class ClientCfg:
@@ -120,7 +124,8 @@ def subscribe(client: mqtt_client.Client, topic):
 def subscribe_in_thread(client: mqtt_client.Client, topic: str, state: State):
 
     def on_message(client, userdata, msg):
-        state.message = json.loads(msg)['data']
+        payload = json.loads(msg.payload.decode())
+        state.data = payload[state.data_str]
 
     client.subscribe(topic)
     client.on_message = on_message
