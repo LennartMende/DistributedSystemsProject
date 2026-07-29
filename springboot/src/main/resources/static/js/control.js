@@ -1,8 +1,19 @@
+// IMPORTS
+import { TabManager } from "./tabManager.js";
+
+
+// GLOBALS
+const tabManager = new TabManager("control");
+tabManager.start();
+
 const sliders = [document.getElementById("joint0_slider"), document.getElementById("joint1_slider"),
     document.getElementById("joint2_slider"), document.getElementById("joint3_slider"),
     document.getElementById("joint4_slider"), document.getElementById("joint5_slider")
 ];
 
+
+// FUNCTIONS
+let updateCounter = 0;
 
 async function postSliderValues() {
     const data = {"shoulder_pan.pos":     parseFloat(sliders[0].value), 
@@ -27,12 +38,17 @@ async function postSliderValues() {
             console.error("POST fehlgeschlagen");
         }
     });
-    console.log("time: ", Date.now() / 1000, " deviceId: ", "control_publisher", " data: ", data);
-    console.log("payload: ", JSON.stringify({
-        "time": Date.now() / 1000,
-        "deviceId": "control_publisher",
-        "data": data
-    }));
+
+    if (updateCounter % 10 === 0) {
+            console.log("Current mode: ", tabManager.getMode());
+            console.log("Current pageCounter: ", tabManager.getPageCounter());
+        }
+    // console.log("time: ", Date.now() / 1000, " deviceId: ", "control_publisher", " data: ", data);
+    // console.log("payload: ", JSON.stringify({
+    //     "time": Date.now() / 1000,
+    //     "deviceId": "control_publisher",
+    //     "data": data
+    // }));
 }
 
 

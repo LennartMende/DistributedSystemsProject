@@ -15,7 +15,7 @@ import jakarta.annotation.PostConstruct;
 
 
 @Component
-public class MqttRobotPublisher {
+public class MqttDashboardPublisher {
     
     //private volatile ControlMessage lastMessage;
     private MqttClient client; 
@@ -24,17 +24,14 @@ public class MqttRobotPublisher {
     @Value("${robot.mqtt.broker}")
     private String broker;
 
-    @Value("${robot.mqtt.controller-id}")
+    @Value("${robot.mqtt.dashboard-id}")
     private String clientId;
 
-    @Value("${robot.mqtt.controller.topic}")
-    private String controllerTopic;
+    @Value("${robot.mqtt.dashboard.topic}")
+    private String dashboardTopic;
 
     @PostConstruct
     public void connect() throws Exception {
-
-        System.out.println("=== MQTT CONTROL PUBLISHER CONNECTED ===");
-
         client = new MqttClient(
             broker,
             clientId,
@@ -50,7 +47,7 @@ public class MqttRobotPublisher {
             SslUtil.getSocketFactory(
                 "../mosquitto/certs/truststore.p12",
                 "123456",
-                "../mosquitto/certs/client_java_control_publisher.p12",
+                "../mosquitto/certs/client_java_dashboard_mode_publisher.p12",
                 "123456"
             )
         );
@@ -58,24 +55,25 @@ public class MqttRobotPublisher {
         client.connect(options);
 
         System.out.println(
-            "MQTT connected: " + client.isConnected()
+            "MQTT on dashboard/mode topic connected: " + client.isConnected()
         );
     }
     
 
     public void publish(String message) throws Exception {
+        System.out.println("===IN MQTT PUBLISHER===");
         if (client == null || !client.isConnected()) {
             throw new IllegalStateException(
                 "MQTT client not connected"
             );
         }
 
-        //System.out.println(controllerTopic+ ": " + message);
+        System.out.println(dashboardTopic+ ": " + message);
         MqttMessage mqttMessage =
             new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
 
         mqttMessage.setQos(1);
 
-        client.publish(controllerTopic, mqttMessage);
+        client.publish(dashboardTopic, mqttMessage);
     }
 }

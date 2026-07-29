@@ -1,17 +1,20 @@
-// ---------------------------------------------------------
-// 0. Imports
-// ---------------------------------------------------------
+// IMPORTS
 import {
     set_alarms,
     ALARM
 } from "./alarm.js";
 
+import { TabManager } from "./tabManager.js";
+
+
+// GLOBALS
+const tabManager = new TabManager("diagram");
+tabManager.start();
+
 let serverWasDown = false;
 let reloadDone = false;
 
-// ---------------------------------------------------------
-// 1. Initialisierung
-// ---------------------------------------------------------
+
 const leaderMsElement = document.getElementById("leaderMachineState");
 let currentJoint = 0;
 let currentArm = "leader";   // "leader" oder "follower"
@@ -76,9 +79,9 @@ if (chartCanvas && typeof Chart !== 'undefined') {
 }
 
 
-// ---------------------------------------------------------
-// 2. Funktionen
-// ---------------------------------------------------------
+// FUNCTIONS
+
+let updateCounter = 0;
 
 async function update() {
     if (!posChart) {
@@ -97,9 +100,6 @@ async function update() {
         const leaderJointValues = leaderHistory.map(h => h[currentJoint]);
         const followerJointValues = followerHistory.map(h => h[currentJoint]);
 
-        console.log(timeStamps);
-        console.log(leaderJointValues.length);
-        console.log(timeStamps.length);
 
         set_alarms(leaderState.temp, followerState.temp, leaderState.volt, followerState.volt)
 
@@ -124,6 +124,11 @@ async function update() {
         }));
 
         posChart.update();
+
+        if (updateCounter % 10 === 0) {
+            console.log("Current mode: ", tabManager.getMode());
+            console.log("Current pageCounter: ", tabManager.getPageCounter());
+        }
 
     } catch (err) {
         console.error("Fetch error:", err);
@@ -152,8 +157,6 @@ function updateMachineState(msElement, state) {
     }
 
     msElement.innerText = state.machineState;
-
-    console.log("machineState =", state.machineState);
 
     if (state.machineState === "RUNNING") {
         msElement.className = "value status-running";

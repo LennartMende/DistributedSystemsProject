@@ -35,46 +35,53 @@ class TeleoperateConfig:
     teleop_time_s: float | None = None
     display_data: bool = False
 
+mqtt_active = False
 
-# create clients
-# positions
-follower_pos_topic = "follower/pos"
-client_id = 'follower_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_pos_publisher = connect_client(clientCfg=clientCfg)
+try:
+    # create clients
+    # positions
+    follower_pos_topic = "follower/pos"
+    client_id = 'follower_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_pos_publisher = connect_client(clientCfg=clientCfg)
 
-leader_pos_topic = "leader/pos"
-client_id = 'leader_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_pos_publisher = connect_client(clientCfg=clientCfg)
+    leader_pos_topic = "leader/pos"
+    client_id = 'leader_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_pos_publisher = connect_client(clientCfg=clientCfg)
 
-# temperatures
-follower_temp_topic = "follower/temp"
-client_id = 'follower_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_temp_publisher = connect_client(clientCfg=clientCfg)
+    # temperatures
+    follower_temp_topic = "follower/temp"
+    client_id = 'follower_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_temp_publisher = connect_client(clientCfg=clientCfg)
 
-leader_temp_topic = "leader/temp"
-client_id = 'leader_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_temp_publisher = connect_client(clientCfg=clientCfg)
+    leader_temp_topic = "leader/temp"
+    client_id = 'leader_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_temp_publisher = connect_client(clientCfg=clientCfg)
 
-# voltages
-follower_volt_topic = "follower/volt"
-client_id = 'follower_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_volt_publisher = connect_client(clientCfg=clientCfg)
+    # voltages
+    follower_volt_topic = "follower/volt"
+    client_id = 'follower_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_volt_publisher = connect_client(clientCfg=clientCfg)
 
-leader_volt_topic = "leader/volt"
-client_id = 'leader_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_volt_publisher = connect_client(clientCfg=clientCfg)
+    leader_volt_topic = "leader/volt"
+    client_id = 'leader_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_volt_publisher = connect_client(clientCfg=clientCfg)
 
-# state
-system_state_topic = "system/state"
-client_id = 'leader_state_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-system_state_publisher = connect_client(clientCfg=clientCfg)
+    # state
+    system_state_topic = "system/state"
+    client_id = 'leader_state_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    system_state_publisher = connect_client(clientCfg=clientCfg)
+
+    mqtt_active = True
+
+except Exception as e:
+    mqtt_active = False
 
 
 def teleop_loop(
@@ -90,23 +97,24 @@ def teleop_loop(
         robot.send_action(action)
         dt_s = time.perf_counter() - loop_start
 
-        leader_pos = teleop.get_action()
-        follower_pos = robot.get_observation()
+        if mqtt_active:
+            leader_pos = action # uses olderteleop.get_action()
+            follower_pos = robot.get_observation()
 
-        leader_temp = teleop.get_temperature()
-        follower_temp = robot.get_temperature()
+            leader_temp = teleop.get_temperature()
+            follower_temp = robot.get_temperature()
 
-        leader_volt = teleop.get_voltage()
-        follower_volt = robot.get_voltage()
+            leader_volt = teleop.get_voltage()
+            follower_volt = robot.get_voltage()
 
-        publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
-        publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
+            publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
+            publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
 
-        publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
-        publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
+            publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
+            publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
 
-        publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
-        publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
+            publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
+            publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
 
         busy_wait(1 / fps - dt_s)
 

@@ -67,8 +67,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
                     //     followerVoltAlarmElement);
-                    console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                 //}
             }
         } else if (leaderTempStatus.warn) {
@@ -84,8 +84,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentLeaderTempAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentLeaderTempAlarmId = sumOfAlarms;
-                    console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -105,8 +105,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentLeaderTempAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentLeaderTempAlarmId = sumOfAlarms;
-                    console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentLeaderTempAlarmId = ", currentLeaderTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -149,8 +149,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentLeaderVoltAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentLeaderVoltAlarmId = sumOfAlarms;
-                    console.log("currentLeaderVoltAlarmId = ", currentLeaderVoltAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentLeaderVoltAlarmId = ", currentLeaderVoltAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -169,8 +169,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentLeaderVoltAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentLeaderVoltAlarmId = sumOfAlarms;
-                    console.log("currentLeaderVoltAlarmId = ", currentLeaderVoltAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentLeaderVoltAlarmId = ", currentLeaderVoltAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -212,8 +212,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentFollowerTempAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentFollowerTempAlarmId = sumOfAlarms;
-                    console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -232,8 +232,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentFollowerTempAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentFollowerTempAlarmId = sumOfAlarms;
-                    console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -252,8 +252,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                 // if (currentFollowerTempAlarmId === 0) {
                     sumOfAlarms += 1;
                     currentFollowerTempAlarmId = sumOfAlarms;
-                    console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentFollowerTempAlarmId = ", currentFollowerTempAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                     // setAlarmPositions(leaderTempAlarmElement,
                     //     leaderVoltAlarmElement,
                     //     followerTempAlarmElement,
@@ -305,8 +305,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                     // leaderVoltAlarmElement,
                     // followerTempAlarmElement,
                     // followerVoltAlarmElement);
-                    console.log("currentFollowerVoltAlarmId = ", currentFollowerVoltAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentFollowerVoltAlarmId = ", currentFollowerVoltAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                 }
             }
         } else if (followerVoltStatus.tooHigh) {
@@ -326,8 +326,8 @@ export function set_alarms(leaderTemp, followerTemp, leaderVolt, followerVolt) {
                     // leaderVoltAlarmElement,
                     // followerTempAlarmElement,
                     // followerVoltAlarmElement);
-                    console.log("currentFollowerVoltAlarmId = ", currentFollowerVoltAlarmId);
-                    console.log("sumOfAlarms = ", sumOfAlarms);
+                    // console.log("currentFollowerVoltAlarmId = ", currentFollowerVoltAlarmId);
+                    // console.log("sumOfAlarms = ", sumOfAlarms);
                 }
             }
         } else {
@@ -395,7 +395,7 @@ function setAlarmPositions(leaderTempAlarmElement,
     leaderVoltAlarmElement,
     followerTempAlarmElement,
     followerVoltAlarmElement) {
-    console.log("setAlarmPositions()");
+    // console.log("setAlarmPositions()");
     [
         leaderTempAlarmElement,
         leaderVoltAlarmElement,
@@ -411,20 +411,20 @@ function setAlarmPositions(leaderTempAlarmElement,
         {id: currentFollowerTempAlarmId, element: followerTempAlarmElement},
         {id: currentFollowerVoltAlarmId, element: followerVoltAlarmElement}
     ];
-    console.log([
-        { name: "leaderTemp", id: currentLeaderTempAlarmId },
-        { name: "leaderVolt", id: currentLeaderVoltAlarmId },
-        { name: "followerTemp", id: currentFollowerTempAlarmId },
-        { name: "followerVolt", id: currentFollowerVoltAlarmId },
-    ]);
+    // console.log([
+    //     { name: "leaderTemp", id: currentLeaderTempAlarmId },
+    //     { name: "leaderVolt", id: currentLeaderVoltAlarmId },
+    //     { name: "followerTemp", id: currentFollowerTempAlarmId },
+    //     { name: "followerVolt", id: currentFollowerVoltAlarmId },
+    // ]);
 
     // DEBUG:
-    console.log(
-        leaderTempAlarmElement,
-        leaderVoltAlarmElement,
-        followerTempAlarmElement,
-        followerVoltAlarmElement
-    );
+    // console.log(
+    //     leaderTempAlarmElement,
+    //     leaderVoltAlarmElement,
+    //     followerTempAlarmElement,
+    //     followerVoltAlarmElement
+    // );
     const activeAlarms = alarms.filter(a => a.id !== 0);
     activeAlarms.sort((a, b) => b.id - a.id);
     for (let i = 0; i < activeAlarms.length; i++) {
@@ -438,5 +438,5 @@ function setAlarmPositions(leaderTempAlarmElement,
             activeAlarms[i].element.style.display = "none";
         }
     }
-    console.log("activeAlarms.length = ", activeAlarms.length);
+    // console.log("activeAlarms.length = ", activeAlarms.length);
 }

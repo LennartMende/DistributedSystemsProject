@@ -303,16 +303,26 @@ cd certs && chmod +x create_java_pub_control_sub_certs.sh
 
 -> Erzeugung der PCKS#12-Datei:
 openssl pkcs12 -export \
-    -inkey client_java_publisher.key \
-    -in client_java_publisher.crt \
+    -inkey client_java_control_publisher.key \
+    -in client_java_control_publisher.crt \
     -certfile ca.crt \
-    -out client_java_publisher.p12 \
+    -out client_java_control_publisher.p12 \
     -password pass:123456
  
 - TRUSTSTORE: enthält vertrauenswürdige CAs
 - KEYSTORE: enthält private Key und CLient-Zertifikat eines Clients
 
 - bei Java-Publisher MqttRobotPublisher.java: Lifecycle geändert (kein public void run(ApplicationArguments args) und auch keine Implementierung des ApplicationRunner-Interfaces mehr), damit erst Connection vollständig durchlaufen kann und erst dann auch tatsächlich gepublisht wird, da sonst Connection zu langsam und somit waren sonst erste Publish-Befehle ungültig, da noch keine Verbindung bestand
+
+-> Weiterhin für Dashboard-Modus-Publisher:
+openssl pkcs12 -export \
+    -inkey client_java_dashboard_publisher.key \
+    -in client_java_dashboard_publisher.crt \
+    -certfile ca.crt \
+    -out client_java_dashboard_publisher.p12 \
+    -password pass:123456
+
+& IMMER ENTSPRECHENDES VERFÜGBARMACHEN IN DEN RICHTIGEN ORDNERN (stm32/certs, mosquitto/certs und zum Debuggen certs)
 ### Weiterhin grundsätzliche Fragen
 ### Was macht Maven?
 ### Was ist Springboots Zuständigkeit?
@@ -322,6 +332,17 @@ openssl pkcs12 -export \
 
 ## Control
 Html + CSS/ JS: MVC -> POST auf HTTP 192.168.7.27 -> RESTful API -> Python-GET auf 192.168.7.1 über 192.168.7.27
+
+## Zugriffskontrolle PC/ Dashboard <-> Control
+Es muss ein Skript geschrieben werden, das erkennt, welche Fenster (index/ diagram/ control) geöffnet sind. Nur erstere dürfen zusammen geöffnet sein. Kein Fenster darf mit control offen sein und auch control darf nicht doppelt geöffnet sein. Um dies zu erfassen, wurde das Skript "..." geschireben: 
+-> dafür getMode(): entweder Konflikt entdecken oder Modus (Beobachtung oder Steuerung) vorgeben
+
+dafür Discovery:
+-> TabManager zählt, wie viele Tabs jedes Fensters geöffnet sind: jeder neue Tab sagt "hello", alle vorhandenen antworten mit "iam", für schließende Tabs wird "closed" ausgeführt. Jeder Tab hat eine eigene Tab-ID (UUID, 128 Bit). Es existiert ein Mapping, das jeder Tab-ID die Art des Tabs (index, diagram, control) zuordnet.
+- Konstruktor: eigene Seitenart wird auf eigene ID gemappt
+- start() mit hello: Somit weiß auch jeder neue Tab und die "i am"-Nachrichten, welche anderen Tabs bereits existieren.
+
+außerdem Heartbeat: alive-nachricht alle 1 s schicken, wenn 3 s keine alive-Nachricht von eingetragenem Task mehr angekommen ist, dann Task aus Map löschen
 
 ## 100. Projekt starten
 1. Ein Terminal öffnen, dort in den `springboot`-Ordner des Repos wechseln und `mvn spring-boot:run` eingeben.

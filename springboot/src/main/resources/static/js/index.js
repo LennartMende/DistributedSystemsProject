@@ -1,7 +1,15 @@
+// IMPORTS
 import {
     set_alarms,
     ALARM
 } from "./alarm.js";
+
+import { TabManager } from "./tabManager.js";
+
+
+// GLOBALS
+const tabManager = new TabManager("index");
+tabManager.start();
 
 let serverWasDown = false;
 let reloadDone = false;
@@ -41,6 +49,8 @@ const followerVoltElements = [document.getElementById("follower_volt_joint0"), d
     document.getElementById("follower_volt_joint4"), document.getElementById("follower_volt_joint5")
 ];
 
+
+// FUNCTIONS
 async function checkServerRestart() {
     try {
         const response = await fetch("/api/health");
@@ -55,6 +65,8 @@ async function checkServerRestart() {
     }
 }
 
+let updateCounter = 0;
+
 async function update() {
     try {
         const leaderState = await fetch(`/api/robot/leader/state`).then(r => r.json());
@@ -66,6 +78,11 @@ async function update() {
         //updateMachineState(followerMsElement, followerState)
 
         updateElementValuesAndColors(leaderState, followerState);
+        
+        if (updateCounter % 10 === 0) {
+            console.log("Current mode: ", tabManager.getMode());
+            console.log("Current pageCounter: ", tabManager.getPageCounter());
+        }
     } catch (err) {
         console.error("Fetch error:", err);
     }
@@ -80,7 +97,7 @@ function updateMachineState(msElement, state) {
 
     msElement.innerText = state.machineState;
 
-    console.log("machineState =", state.machineState);
+    //console.log("machineState =", state.machineState);
 
     if (state.machineState === "RUNNING") {
         msElement.className = "value status-running";

@@ -1,7 +1,5 @@
 package com.mende.examination.soarms;
 
-import java.util.Map;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,29 +7,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
-@RequestMapping("/api")
-public class WebControlController {
+@RequestMapping("/api/dashboard")
+public class DashboardController {
 
-    private volatile String lastMessage; // private volatile ControlMessage lastMessage;
+    private volatile String lastMessage;
 
-    private final MqttRobotPublisher publisher;
+    private final MqttDashboardPublisher publisher;
 
-    public WebControlController(MqttRobotPublisher publisher) {
+    public DashboardController(MqttDashboardPublisher publisher) {
         this.publisher = publisher;
     }
 
-    @PostMapping("/control")
-    public ResponseEntity<Void> postControl(@RequestBody String body) throws Exception {
-        lastMessage = body;
-        // System.out.println("control" + ": " + body);
+    @PostMapping("/mode")
+    public void updateMode(@RequestBody String body) throws Exception {
+        this.lastMessage = body;
+        //System.out.println("Dashboard mode: " + lastMessage);
         publisher.publish(body);
-        return ResponseEntity.ok().build();
     }
 
-
-    @GetMapping(value="/control", produces="application/json")
+    @GetMapping(value="/mode", produces="application/json")
     public ResponseEntity<String> getControl() {
         if (lastMessage == null) {
             return ResponseEntity.noContent().build();
