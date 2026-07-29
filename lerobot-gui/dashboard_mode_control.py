@@ -37,29 +37,39 @@ if dashboard_active:
         while dashboard_mode.data is None:
             time.sleep(0.01)
 
-        if dashboard_mode.data == "observe" and last_dashboard_mode != "observe":
-            if process is not None:
-                process.terminate()
-            process = subprocess.Popen("python3", "-u", "/opt/lerobot-gui/src/app.py")
-            last_dashboard_mode = "observe"
-            #process_type = "OBSERVE"
+        if dashboard_mode.data == last_dashboard_mode:
+            time.sleep(0.01)
+            continue
 
-        elif dashboard_mode.data == "control" and last_dashboard_mode != "control":
+        elif dashboard_mode.data == "observe":
             if process is not None:
                 process.terminate()
-            process = subprocess.Popen("python3", "-u", "control_conflict_window.py", "control") # WICHTIG: sys.argv[1] == "control" PROBABLY NOT THE CASE WHEN RUNNING WITH -u
+
+            process = subprocess.Popen(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/app.py"])
+            last_dashboard_mode = "observe"
+
+        elif dashboard_mode.data == "control":
+            if process is not None:
+                process.terminate()
+
+            process = subprocess.Popen(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/control_conflict_window.py", "control"])
             last_dashboard_mode = "control"
 
-        elif dashboard_mode.data == "conflict" and last_dashboard_mode != "conflict":
+        elif dashboard_mode.data == "conflict":
             if process is not None:
                 process.terminate()
-            process = subprocess.Popen("python3", "-u", "control_conflict_window.py", "conflict") # WICHTIG: sys.argv[1] == "conflict" PROBABLY NOT THE CASE WHEN RUNNING WITH -u
+
+            process = subprocess.Popen(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/control_conflict_window.py", "conflict"])
             last_dashboard_mode = "conflict"
 
         else:
-            raise ValueError
+            if process is not None:
+                process.terminate()
+
+            process = subprocess.Popen(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/app.py"])
+            last_dashboard_mode = dashboard_mode.data
 
         time.sleep(0.01)
 
 else:
-    # hier den systemctl start lerobot
+    subprocess.Popen(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/app.py"])
