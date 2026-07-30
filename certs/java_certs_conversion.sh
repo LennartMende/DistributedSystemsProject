@@ -5,7 +5,8 @@ set -e
 for name in \
   client_java_subscriber \
   client_java_control_publisher \
-  client_java_dashboard_mode_publisher
+  client_java_dashboard_mode_publisher \
+  client_java_system_state_subscriber
 do
   openssl pkcs12 -export \
     -in ${name}.crt \

@@ -9,6 +9,7 @@ cp client_control* ../stm32/certs/
 cp client_dashboard* ../stm32/certs/
 cp client_follower* ../stm32/certs/
 cp client_leader* ../stm32/certs/
+cp client_system_state_publisher.* ../stm32/certs/
 
 
 cp ca.crt ../stm32/lerobot/certs/
@@ -17,7 +18,7 @@ cp client_control* ../stm32/lerobot/certs/
 cp client_dashboard* ../stm32/lerobot/certs/
 cp client_follower* ../stm32/lerobot/certs/
 cp client_leader* ../stm32/lerobot/certs/
-
+cp client_system_state_publisher.* ../stm32/certs/
 
 
 # Mosquitto

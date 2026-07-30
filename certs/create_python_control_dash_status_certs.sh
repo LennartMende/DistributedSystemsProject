@@ -2,7 +2,9 @@
 
 set -e
 
-names=("client_control_subscriber" "client_dashboard_mode_subscriber")
+# names=("client_control_subscriber" "client_dashboard_mode_subscriber" "client_system_state_publisher")
+
+names=("client_system_state_publisher")
 
 for name in "${names[@]}"; do
 
@@ -29,7 +31,6 @@ for name in "${names[@]}"; do
 
     rm "${name}.csr"
 
-    done
 done
 
 echo "Done!"
