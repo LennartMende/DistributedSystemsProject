@@ -23,3 +23,6 @@ openssl x509 \
     -extfile san.cnf
 
 rm server.csr
+
+chmod 644 server.crt
+chmod 644 server.key
