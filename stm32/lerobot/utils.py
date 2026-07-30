@@ -3,7 +3,7 @@ import time
 from paho.mqtt import client as mqtt_client
 import json
 
-from constants import PORT, BROKER, USERNAME, PASSWORD
+from lerobot.constants import PORT, BROKER, USERNAME, PASSWORD, ABSOLUTE_CERTS_PATH
 
 
 # State class for concurrent processing
@@ -26,13 +26,13 @@ class ClientCfg:
     # password: str = PASSWORD
 
     # TLS:
-    ca: str = "../certs/ca.crt" # for tls
+    ca: str = ABSOLUTE_CERTS_PATH + "/ca.crt" # for tls
     @property
     def cert(self) -> str:
-        return f"../certs/client_{self.client_id}.crt"
+        return f"{ABSOLUTE_CERTS_PATH}/client_{self.client_id}.crt"
     @property
     def key(self) -> str:
-        return f"../certs/client_{self.client_id}.key"
+        return f"{ABSOLUTE_CERTS_PATH}/client_{self.client_id}.key"
 
 
 # connect a clientwith the broker
@@ -46,10 +46,11 @@ def connect(clientCfg: ClientCfg):
     client = mqtt_client.Client(client_id=clientCfg.client_id)
     # client.username_pw_set(clientCfg.username, clientCfg.password) # for username + password
     # secure MQTT:
+    print("ca_certs = ", clientCfg.ca, " certfile = ", clientCfg.cert, " keyfile = ", clientCfg.key)
     client.tls_set(
-        ca_certs="../certs/ca.crt",
-        certfile=f"../certs/client_{clientCfg.client_id}.crt",
-        keyfile=f"../certs/client_{clientCfg.client_id}.key"
+        ca_certs=clientCfg.ca,
+        certfile=clientCfg.cert,
+        keyfile=clientCfg.key
     )
     client.tls_insecure_set(False)
     client.on_connect = on_connect

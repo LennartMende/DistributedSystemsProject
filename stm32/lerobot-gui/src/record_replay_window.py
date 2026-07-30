@@ -73,9 +73,9 @@ from constants import (
 
 
 # state
-system_state_topic = "system/state"
-client_id = 'system_state_publisher'
-clientCfg = ClientCfg(client_id=client_id)
+# system_state_topic = "system/state"
+# client_id = 'system_state_publisher'
+# clientCfg = ClientCfg(client_id=client_id)
 
 
 class RecordReplayWindow(QWidget):
@@ -140,7 +140,7 @@ class RecordReplayWindow(QWidget):
         self.setLayout(layout)
 
         #create a publisher for state messages
-        self.system_state_publisher = connect_client(clientCfg=clientCfg)
+        # self.system_state_publisher = connect_client(clientCfg=clientCfg)
         self.start_time = time.perf_counter()
 
     def run(self) -> None:
@@ -184,7 +184,7 @@ class RecordReplayWindow(QWidget):
         else:
             raise Exception("Illegal state")
 
-        publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "STOPPED"}, start_time=self.start_time)
+        # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "STOPPED"}, start_time=self.start_time)
 
     def set_english(self) -> None:
 
@@ -306,7 +306,7 @@ class RecordReplayWindow(QWidget):
                     RECORDING_STARTED_DE, RECORD_STOP_INSTRUCTION_DE, RECORDING_STATUS_TEXT_BEFORE_S_DE  + str(self.remaining_msg) + SECONDS + RECORDING_STATUS_TEXT_AFTER_S_DE
                 ))
             
-            publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "RECORDING"}, start_time=self.start_time)
+            # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "RECORDING"}, start_time=self.start_time)
 
         elif event == "resetting":
 
@@ -323,7 +323,7 @@ class RecordReplayWindow(QWidget):
                     NEXT_STEP_RESETTING_DE , RESETTING_STOP_INSTRUCTION_DE, RESETTING_STATUS_TEXT_DE + str(self.remaining_msg) + SECONDS
                 ))
 
-            publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "RESETTING"}, start_time=self.start_time)
+            # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "RESETTING"}, start_time=self.start_time)
 
         elif event == "replaying":
 
@@ -340,7 +340,7 @@ class RecordReplayWindow(QWidget):
                     REPLAYING_STARTED_DE, REPLAY_STOP_INSTRUCTION_DE, REPLAYING_STATUS_TEXT_DE + str(self.remaining_msg) + SECONDS
                 ))
 
-            publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "REPLAYING"}, start_time=self.start_time)
+            # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "REPLAYING"}, start_time=self.start_time)
 
         elif event == "finished":
 
@@ -358,7 +358,7 @@ class RecordReplayWindow(QWidget):
                     FINISHED_DE, RECORD_START_AGAIN_INSTRUCTION_DE, READY_STATUS_DE
                 ))
 
-            publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "READY"}, start_time=self.start_time)
+            # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "READY"}, start_time=self.start_time)
 
     def setText(self, textCfg: "RecordReplayWindow.TextCfg"):
         self.last_action.setText(textCfg.last_action)
@@ -372,3 +372,4 @@ class RecordReplayWindow(QWidget):
         last_action: str
         instruction: str
         status: str
+

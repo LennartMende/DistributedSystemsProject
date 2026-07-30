@@ -1,5 +1,6 @@
 """
-```shell
+```
+shell
 python3 -m lerobot.teleoperate --robot.type=so101_follower --robot.port=/dev/so-follower --robot.id=my_follower --teleop.type=so101_leader --teleop.port=/dev/so-leader --teleop.id=my_leader
 ```
 """
@@ -25,7 +26,7 @@ from lerobot.common.teleoperators.so101_leader.config_so101_leader import SO101L
 
 
 
-
+print("Start of teleop script")
 
 @dataclass
 class TeleoperateConfig:
@@ -36,51 +37,83 @@ class TeleoperateConfig:
     display_data: bool = False
 
 
-# create clients
-# positions
-follower_pos_topic = "follower/pos"
-client_id = 'follower_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_pos_publisher = connect_client(clientCfg=clientCfg)
+mqtt_active = False
 
-leader_pos_topic = "leader/pos"
-client_id = 'leader_pos_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_pos_publisher = connect_client(clientCfg=clientCfg)
+try:
+    # create clients
+    publishers = []
+    # positions
+    print("Before follower_pos_topic = 'follower/pos'")
+    follower_pos_topic = "follower/pos"
+    print("After follower_pos_topic = 'follower/pos'")
+    client_id = 'follower_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    print("After clientCfg = ClientCfg(client_id=client_id)")
+    follower_pos_publisher = connect_client(clientCfg=clientCfg)
+    print("follower_pos_publisher = connect_client(clientCfg=clientCfg)")
+    publishers.append(follower_pos_publisher)
+    print("After follower_pos_publisher")
 
-# temperatures
-follower_temp_topic = "follower/temp"
-client_id = 'follower_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_temp_publisher = connect_client(clientCfg=clientCfg)
+    leader_pos_topic = "leader/pos"
+    client_id = 'leader_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_pos_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(leader_pos_publisher)
+    print("After leader_pos_publisher")
 
-leader_temp_topic = "leader/temp"
-client_id = 'leader_temp_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_temp_publisher = connect_client(clientCfg=clientCfg)
+    # temperatures
+    follower_temp_topic = "follower/temp"
+    client_id = 'follower_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_temp_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(follower_temp_publisher)
+    print("After follower_temp_publisher")
 
-# voltages
-follower_volt_topic = "follower/volt"
-client_id = 'follower_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-follower_volt_publisher = connect_client(clientCfg=clientCfg)
+    leader_temp_topic = "leader/temp"
+    client_id = 'leader_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_temp_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(leader_temp_publisher)
 
-leader_volt_topic = "leader/volt"
-client_id = 'leader_volt_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-leader_volt_publisher = connect_client(clientCfg=clientCfg)
+    # voltages
+    follower_volt_topic = "follower/volt"
+    client_id = 'follower_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_volt_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(follower_volt_publisher)
 
-# state
-system_state_topic = "system/state"
-client_id = 'leader_state_publisher'
-clientCfg = ClientCfg(client_id=client_id)
-system_state_publisher = connect_client(clientCfg=clientCfg)
+    print("After follower_volt_publisher")
+
+    leader_volt_topic = "leader/volt"
+    client_id = 'leader_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_volt_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(leader_volt_publisher)
+    print("After leader_volt_publisher")
+
+    # state
+    system_state_topic = "system/state"
+    client_id = 'system_state_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    print("After system_state_publisher init, before system_state_publisher connection")
+    system_state_publisher = connect_client(clientCfg=clientCfg)
+    publishers.append(system_state_publisher)
+
+    print("After system_state_publisher")
+
+    for publisher in publishers:
+        publisher.loop_start()
+
+    mqtt_active = True
+
+except Exception as e:
+    raise Exception("Error occured during mqtt initialization: ", e)
+    #mqtt_active = False
 
 
 def teleop_loop(
     teleop: Teleoperator, robot: Robot, fps: int, display_data: bool = False, duration: float | None = None
 ):
-    system_state_publisher.
     start_time = time.perf_counter()
 
     while True:
@@ -90,23 +123,24 @@ def teleop_loop(
         robot.send_action(action)
         dt_s = time.perf_counter() - loop_start
 
-        leader_pos = teleop.get_action()
-        follower_pos = robot.get_observation()
+        if mqtt_active:
+            leader_pos = teleop.get_action()
+            follower_pos = robot.get_observation()
 
-        leader_temp = teleop.get_temperature()
-        follower_temp = robot.get_temperature()
+            leader_temp = teleop.get_temperature()
+            follower_temp = robot.get_temperature()
 
-        leader_volt = teleop.get_voltage()
-        follower_volt = robot.get_voltage()
+            leader_volt = teleop.get_voltage()
+            follower_volt = robot.get_voltage()
 
-        publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
-        publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
+            publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
+            publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
 
-        publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
-        publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
+            publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
+            publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
 
-        publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
-        publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
+            publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
+            publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
 
         busy_wait(1 / fps - dt_s)
 
@@ -131,12 +165,15 @@ def teleoperate(cfg: TeleoperateConfig):
     robot.connect()
 
     print("CONNECTED", flush=True)
-    publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RESETTING"}, start_time=time.perf_counter())
+
+    if mqtt_active:
+        publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RESETTING"}, start_time=time.perf_counter())
  
     set_rest_pose(teleop=teleop, robot=robot, rest_pose=REST_POSE, fps=cfg.fps)
 
     print("READY", flush=True)
-    publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RUNNING"}, start_time=time.perf_counter())
+    if mqtt_active:
+        publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RUNNING"}, start_time=time.perf_counter())
     try:
         teleop_loop(teleop, robot, cfg.fps, display_data=cfg.display_data, duration=cfg.teleop_time_s)
     except KeyboardInterrupt:
@@ -148,3 +185,4 @@ def teleoperate(cfg: TeleoperateConfig):
 
 if __name__ == "__main__":
     teleoperate()
+

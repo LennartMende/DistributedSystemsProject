@@ -18,6 +18,8 @@ from lerobot.common.utils.robot_utils import busy_wait
 from lerobot.common.utils.utils import init_logging
 
 from lerobot.constants import REST_POSE, SLEEP_DURATION, RECORD_DURATION, FPS
+from lerobot.utils import ClientCfg, publish
+from lerobot.utils import connect as connect_client
 from lerobot.motor_read_write import set_rest_pose
 
 # the following imports are not neccesary for the script itself, but for shell command and argument parsing via draccus
@@ -36,7 +38,53 @@ class TeleoperateConfig:
     teleop_time_s: float | None = 20
     display_data: bool = False
 
+mqtt_active = False
 
+try:
+    # create clients
+    # positions
+    follower_pos_topic = "follower/pos"
+    client_id = 'follower_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_pos_publisher = connect_client(clientCfg=clientCfg)
+
+    leader_pos_topic = "leader/pos"
+    client_id = 'leader_pos_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_pos_publisher = connect_client(clientCfg=clientCfg)
+
+    # temperatures
+    follower_temp_topic = "follower/temp"
+    client_id = 'follower_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_temp_publisher = connect_client(clientCfg=clientCfg)
+
+    leader_temp_topic = "leader/temp"
+    client_id = 'leader_temp_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_temp_publisher = connect_client(clientCfg=clientCfg)
+
+    # voltages
+    follower_volt_topic = "follower/volt"
+    client_id = 'follower_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    follower_volt_publisher = connect_client(clientCfg=clientCfg)
+
+    leader_volt_topic = "leader/volt"
+    client_id = 'leader_volt_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    leader_volt_publisher = connect_client(clientCfg=clientCfg)
+
+    # state
+    system_state_topic = "system/state"
+    client_id = 'leader_state_publisher'
+    clientCfg = ClientCfg(client_id=client_id)
+    system_state_publisher = connect_client(clientCfg=clientCfg)
+
+    mqtt_active = True
+
+except Exception as e:
+    mqtt_active = False
 
 dataset = []
 
@@ -44,19 +92,41 @@ def record_loop(
     teleop: Teleoperator, robot: Robot, fps: int = FPS, display_data: bool = False, duration: float | None = RECORD_DURATION
 ):
     
-    start = time.perf_counter()
-    progress = Progress(duration=duration, start=start, prev_remaining=None, event="recording")
+    start_time = time.perf_counter()
+    progress = Progress(duration=duration, start=start_time, prev_remaining=None, event="recording")
 
     while True:
         loop_start = time.perf_counter()
         action = teleop.get_action()
-        dataset.append((time.perf_counter() - start, action))
+        dataset.append((time.perf_counter() - start_time, action))
 
         robot.send_action(action)
+
+        if mqtt_active:
+            leader_pos = action # uses olderteleop.get_action()
+            follower_pos = robot.get_observation()
+
+            leader_temp = teleop.get_temperature()
+            follower_temp = robot.get_temperature()
+
+            leader_volt = teleop.get_voltage()
+            follower_volt = robot.get_voltage()
+
+            publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
+            publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
+
+            publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
+            publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
+
+            publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
+            publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
+
+
+
         dt_s = time.perf_counter() - loop_start
         busy_wait(max(0, 1 / fps - dt_s))
 
-        if duration is not None and time.perf_counter() - start >= duration:
+        if duration is not None and time.perf_counter() - start_time >= duration:
             break
 
         if duration is not None:
@@ -179,7 +249,7 @@ class Progress:
             self.remaining = self.duration - math.floor(time.perf_counter() - self.start)
         except:
             raise TypeError("None is just possible because of campatibility with other classes, \
-                            but that doesn't make sense for a  progress object.")
+                            but that doesn't make sense for a Progress object.")
         if (self.remaining != self.prev_remaining or self.prev_remaining is None) and self.remaining != 0:
             print(json.dumps({
                 "event": self.event,

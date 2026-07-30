@@ -51,9 +51,9 @@ from constants import (
 
 
 # state
-system_state_topic = "system/state"
-client_id = 'system_state_publisher'
-clientCfg = ClientCfg(client_id=client_id)
+# system_state_topic = "system/state"
+# client_id = 'system_state_publisher'
+# clientCfg = ClientCfg(client_id=client_id)
 
 
 class TeleopWindow(QWidget):
@@ -113,7 +113,7 @@ class TeleopWindow(QWidget):
         self.setLayout(layout)
         
         #create a publisher for state messages
-        self.system_state_publisher = connect_client(clientCfg=clientCfg)
+        # self.system_state_publisher = connect_client(clientCfg=clientCfg)
         self.start_time = time.perf_counter()
 
 
@@ -132,7 +132,7 @@ class TeleopWindow(QWidget):
         else:
             self.setText(TeleopWindow.TextCfg(TELEOPERATION_STARTED_DE, CONNECTION_STOP_INSTRUCTION_DE, CONNECTION_STATUS_DE))
 
-        publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "TELEOPERATING"}, start_time=self.start_time)
+        # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "TELEOPERATING"}, start_time=self.start_time)
 
 
     def stop(self) -> None:
@@ -161,7 +161,7 @@ class TeleopWindow(QWidget):
         else:
             raise Exception("Illegal state")
 
-        publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "STOPPED"}, start_time=self.start_time)
+        # publish(client=self.system_state_publisher, topic=system_state_topic, data={"state": "STOPPED"}, start_time=self.start_time)
 
     def set_english(self) -> None:
 
@@ -275,3 +275,4 @@ class TeleopWindow(QWidget):
         last_action: str
         instruction: str
         status: str
+
