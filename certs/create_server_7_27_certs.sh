@@ -8,7 +8,7 @@ openssl req \
     -new \
     -key server_7_27.key \
     -out server_7_27.csr \
-    -config san_7_27.cnf
+    -config server_san_7_27.cnf
 
 openssl x509 \
     -req \
@@ -20,7 +20,7 @@ openssl x509 \
     -days 7300 \
     -sha256 \
     -extensions req_ext \
-    -extfile san_7_27.cnf
+    -extfile server_san_7_27.cnf
 
 rm server_7_27.csr
 

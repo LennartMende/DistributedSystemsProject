@@ -2,9 +2,9 @@
 
 set -e
 
-# names=("client_java_control_publisher" "client_java_dashboard_mode_publisher" "client_java_subscriber" "client_java_system_state_subscriber")
+names=("client_java_control_publisher" "client_java_dashboard_mode_publisher" "client_java_subscriber" "client_java_system_state_subscriber")
 
-names=("client_java_system_state_subscriber")
+# names=("client_java_system_state_subscriber")
 
 for name in "${names[@]}"; do
 
