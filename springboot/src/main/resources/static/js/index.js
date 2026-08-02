@@ -182,7 +182,12 @@ function updateElements(elements, values) {
 
     elements.forEach((element, index) => {
         if (element) {
-            element.innerText = values && values[index] !== undefined ? values[index] : "-";
+            if (values && values[index] !== undefined) {
+                element.innerText = Number(values[index]).toFixed(2);
+            }
+            else {
+                element.innerText = "-";
+            }
         }
     });
 }

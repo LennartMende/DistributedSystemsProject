@@ -12,9 +12,9 @@ export const alarmElementList = ".leader-temp-critical, .leader-temp-warn, .lead
 export const ALARM = {
     leader: {
         temp: {
-            min: 20,
-            warn: 33,
-            alarm: 35
+            min: 5,
+            warn: 40,
+            alarm: 45
         },
         volt: {
             min: 4.5,
@@ -23,9 +23,9 @@ export const ALARM = {
     },
     follower: {
         temp: {
-            min: 20,
-            warn: 38,
-            alarm: 40
+            min: 5,
+            warn: 45,
+            alarm: 50
         },
         volt: {
             min: 11.5,

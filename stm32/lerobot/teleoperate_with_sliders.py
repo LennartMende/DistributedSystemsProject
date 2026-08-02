@@ -1,9 +1,3 @@
-"""
-```shell
-python3 -m lerobot.teleoperate --robot.type=so101_follower --robot.port=/dev/so-follower --robot.id=my_follower --teleop.type=so101_leader --teleop.port=/dev/so-leader --teleop.id=my_leader
-```
-"""
-
 import time
 import draccus
 
@@ -37,16 +31,17 @@ class TeleoperateConfig:
 
 
 # create subscribing client
-system_state_topic = "control"
+control_topic = "control"
 client_id = 'control_subscriber'
 clientCfg = ClientCfg(client_id=client_id)
-system_state_publisher = connect_client(clientCfg=clientCfg)
+control_subscriber = connect_client(clientCfg=clientCfg)
 
 # state
 system_state_topic = "system/state"
-client_id = 'leader_state_publisher'
+client_id = 'system_state_publisher'
 clientCfg = ClientCfg(client_id=client_id)
 system_state_publisher = connect_client(clientCfg=clientCfg)
+system_state_publisher.loop_start()
 
 state: State = State()
 
@@ -55,13 +50,15 @@ def teleop_loop(
     teleop: Teleoperator, robot: Robot, fps: int, display_data: bool = False, duration: float | None = None
 ):
     
-    subscribe_in_thread(client=system_state_publisher, topic=system_state_topic, state=state)
+    subscribe_in_thread(client=control_subscriber, topic=control_topic, state=state)
 
     start_time = time.perf_counter()
 
     while True:
         loop_start = time.perf_counter()
         action = state.data
+
+        print("In teleop loop: state.data = ", state.data)
 
         robot.send_action(action)
         dt_s = time.perf_counter() - loop_start

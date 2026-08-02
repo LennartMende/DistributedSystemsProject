@@ -73,6 +73,7 @@ public class MqttDashboardPublisher {
             new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
 
         mqttMessage.setQos(1);
+        mqttMessage.setRetained(true);
 
         client.publish(dashboardTopic, mqttMessage);
     }

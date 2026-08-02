@@ -76,6 +76,8 @@ public class MqttRobotPublisher {
 
         mqttMessage.setQos(1);
 
+        System.out.printf("Published %s to topic %s\n", message, controllerTopic);
+
         client.publish(controllerTopic, mqttMessage);
     }
 }

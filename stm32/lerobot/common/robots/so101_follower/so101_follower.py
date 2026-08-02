@@ -190,7 +190,7 @@ class SO101Follower(Robot):
         # Read arm position
         start = time.perf_counter()
         volt_dict = self.bus.sync_read("Present_Voltage")
-        volt_dict = {f"{motor}.temp": val/10 for motor, val in volt_dict.items()}
+        volt_dict = {f"{motor}.volt": val/10 for motor, val in volt_dict.items()}
         dt_ms = (time.perf_counter() - start) * 1e3
         logger.debug(f"{self} read voltage: {dt_ms:.1f}ms")
 

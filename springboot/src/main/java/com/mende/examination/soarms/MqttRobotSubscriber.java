@@ -173,6 +173,7 @@ public class MqttRobotSubscriber implements ApplicationRunner {
 
     private void handleVolt(RobotStateService service, MqttMessage message) {
         ParsedMessage parsedMessage = new ParsedMessage(new String(message.getPayload()));
+        System.out.println("Parsed message's data = " + parsedMessage.data + " from device " + parsedMessage.deviceId);
         try {
             if (parsedMessage.deviceId.equals(service.deviceId)) {
                 service.updateVolt(parsedMessage.data);

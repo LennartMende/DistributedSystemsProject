@@ -167,6 +167,7 @@ public class RobotStateService {
 
     private Double extractDoubleValueFromNode(JsonNode root, String key) {
         JsonNode node = root.get(key);
+        System.out.println("node in RobotStateService: " + node);
         if (node != null && !node.isNull()) {
             return node.doubleValue();
         }

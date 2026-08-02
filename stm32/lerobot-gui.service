@@ -1,0 +1,29 @@
+[Unit]
+Description=LeRobot GUI (PyQt5)
+After=weston-graphical-session.service systemd-udevd.service
+Requires=weston-graphical-session.service
+Wants=systemd-udevd.service
+
+[Service]
+Type=simple
+User=weston
+Group=weston
+
+Environment=QT_QPA_PLATFORM=wayland
+Environment=QT_QPA_PLATFORMTHEME=
+Environment=QT_LOGGING_RULES=qt.qpa.wayland=false
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=XDG_SESSION_TYPE=wayland
+
+ExecStartPre=/bin/sleep 2
+ExecStart=/usr/bin/python3 -u /opt/lerobot-gui/src/dashboard_mode_control.py
+
+Restart=always
+RestartSec=2
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
