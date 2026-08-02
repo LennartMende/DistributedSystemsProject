@@ -136,11 +136,19 @@ def teleop_loop(
             publish(client=leader_pos_publisher, topic=leader_pos_topic, data=leader_pos, start_time=start_time)
             publish(client=follower_pos_publisher, topic=follower_pos_topic, data=follower_pos, start_time=start_time)
 
+<<<<<<< HEAD
 #            publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
  #           publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
 
   #          publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
    #         publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
+=======
+            publish(client=leader_temp_publisher, topic=leader_temp_topic, data=leader_temp, start_time=start_time)
+            publish(client=follower_temp_publisher, topic=follower_temp_topic, data=follower_temp, start_time=start_time)
+
+            publish(client=leader_volt_publisher, topic=leader_volt_topic, data=leader_volt, start_time=start_time)
+            publish(client=follower_volt_publisher, topic=follower_volt_topic, data=follower_volt, start_time=start_time)
+>>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
         busy_wait(1 / fps - dt_s)
 

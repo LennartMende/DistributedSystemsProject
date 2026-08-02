@@ -13,4 +13,4 @@ chmod +x create_python_control_dash_status_certs.sh
 ./java_certs_conversion.sh
 
 ./create_python_arm_certs.sh
-./create_python_control_dash_certs.sh
+./create_python_control_dash_status_certs.sh

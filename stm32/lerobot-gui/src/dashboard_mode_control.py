@@ -130,4 +130,3 @@ if dashboard_active:
 
 else:
     subprocess.run(["/usr/bin/python3", "-u", "/opt/lerobot-gui/src/app.py"])
-

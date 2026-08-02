@@ -1,7 +1,7 @@
 1. Mit cd in den Ordner <repo-root>/certs wechseln, dann diese Zeilen eingeben oder einfügen:
 chmod +x create_all_certs.sh
 ./create_all_certs.sh
-chmod +x distribute_all.sh
-./distribute_all.sh
+chmod +x distribute_all_certs.sh
+./distribute_all_certs.sh
 
 -> Damit werden die Zertifikate erzeugt und in die entsprechenden Verzeichnisse kopiert

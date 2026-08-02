@@ -1,3 +1,11 @@
+- Github Repo auf Vordermann bringen und dann auf HTWK Repo von Nico laden
+- requirements.txt erstellen
+- astral uv zum Erstellen von 2 environments: PC und STM, sodass man es auch auf dem Rechner ausführen kann
+- SD-Karten Image auf Cloud hochladen
+
+
+
+
 Aufgaben von Prof. Pretschner unter Extensions:
 • Überarbeitung des Alarms
 
