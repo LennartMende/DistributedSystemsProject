@@ -23,8 +23,4 @@ BROKER = "192.168.7.27"
 PORT = 8883 # 1883 for standard MQTT, 8883 for secure MQTT
 USERNAME = "username"
 PASSWORD = "password"
-<<<<<<< HEAD
 ABSOLUTE_CERTS_PATH: str = "/usr/lib/python3.11/site-packages/certs"
-=======
-ABSOLUTE_CERTS_PATH: str = "/usr/lib/python3.11/site-packages/lerobot/certs"
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6

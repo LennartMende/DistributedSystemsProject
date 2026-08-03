@@ -46,7 +46,7 @@ def connect(clientCfg: ClientCfg):
     client = mqtt_client.Client(client_id=clientCfg.client_id)
     # client.username_pw_set(clientCfg.username, clientCfg.password) # for username + password
     # secure MQTT:
-    print("ca_certs = ", clientCfg.ca, " certfile = ", clientCfg.cert, " keyfile = ", clientCfg.key)
+    # print("ca_certs = ", clientCfg.ca, " certfile = ", clientCfg.cert, " keyfile = ", clientCfg.key)
     client.tls_set(
         ca_certs=clientCfg.ca,
         certfile=clientCfg.cert,
