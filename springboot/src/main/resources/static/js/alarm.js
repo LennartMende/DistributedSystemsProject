@@ -13,8 +13,8 @@ export const ALARM = {
     leader: {
         temp: {
             min: 5,
-            warn: 45,
-            alarm: 50
+            warn: 50,
+            alarm: 55
         },
         volt: {
             min: 4.5,
@@ -23,9 +23,9 @@ export const ALARM = {
     },
     follower: {
         temp: {
-            min: 20,
-            warn: 38,
-            alarm: 40
+            min: 5,
+            warn: 55,
+            alarm: 60
         },
         volt: {
             min: 11.5,
