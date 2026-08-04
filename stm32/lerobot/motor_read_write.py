@@ -4,6 +4,8 @@ python3 -m lerobot.motor_read_write --robot.type=so101_follower --robot.port=/de
 ```
 """
 
+import math
+import json
 import sys
 import time
 import logging
@@ -34,6 +36,37 @@ class TeleoperateConfig:
     fps: int = 60
     teleop_time_s: float | None = None
     display_data: bool = False
+    
+    
+    
+class Progress:
+    def __init__(self, duration: float | None, start: float, prev_remaining: int | None, event: str):
+        if type(duration) is None:
+            raise TypeError("None is just possible because of campatibility with other classes, \
+                            but that doesn't make sense for a  progress object.")
+        self.duration = duration
+        self.start = start
+        self.prev_remaining = prev_remaining
+        self.event = event
+    
+    def log_in_loop(self):
+        try:
+            self.remaining = self.duration - math.floor(time.perf_counter() - self.start)
+        except:
+            raise TypeError("None is just possible because of campatibility with other classes, \
+                            but that doesn't make sense for a Progress object.")
+        if (self.remaining != self.prev_remaining or self.prev_remaining is None) and self.remaining != 0:
+            print(json.dumps({
+                "event": self.event,
+                "remaining": self.remaining
+            }), flush=True)
+        self.prev_remaining = self.remaining
+
+    def log_after_loop(self):
+        print(json.dumps({
+            "event": self.event,
+            "remaining": 0
+        }), flush=True)
 
 
 
@@ -84,8 +117,6 @@ def set_rest_pose(
     fps: int,
     duration: float | None = 3,
 ):
-    
-    from lerobot.record_and_replay import Progress
     
     start = time.perf_counter()
     progress = Progress(duration=duration, start=start, prev_remaining=None, event="resetting")
