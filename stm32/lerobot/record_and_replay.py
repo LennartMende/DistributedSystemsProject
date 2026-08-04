@@ -42,63 +42,44 @@ mqtt_active = False
 
 try:
     # create clients
-<<<<<<< HEAD
     publishers = []
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
     # positions
     follower_pos_topic = "follower/pos"
     client_id = 'follower_pos_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     follower_pos_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(follower_pos_publisher)
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     leader_pos_topic = "leader/pos"
     client_id = 'leader_pos_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     leader_pos_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(leader_pos_publisher)
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     # temperatures
     follower_temp_topic = "follower/temp"
     client_id = 'follower_temp_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     follower_temp_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(follower_temp_publisher)
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     leader_temp_topic = "leader/temp"
     client_id = 'leader_temp_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     leader_temp_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(leader_temp_publisher)
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     # voltages
     follower_volt_topic = "follower/volt"
     client_id = 'follower_volt_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     follower_volt_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(follower_volt_publisher)
-=======
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     leader_volt_topic = "leader/volt"
     client_id = 'leader_volt_publisher'
     clientCfg = ClientCfg(client_id=client_id)
     leader_volt_publisher = connect_client(clientCfg=clientCfg)
-<<<<<<< HEAD
     publishers.append(leader_volt_publisher) 
 
     # state
@@ -110,14 +91,6 @@ try:
 
     for publisher in publishers:
         publisher.loop_start()
-=======
-
-    # state
-    system_state_topic = "system/state"
-    client_id = 'leader_state_publisher'
-    clientCfg = ClientCfg(client_id=client_id)
-    system_state_publisher = connect_client(clientCfg=clientCfg)
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
 
     mqtt_active = True
 
@@ -129,12 +102,8 @@ dataset = []
 def record_loop(
     teleop: Teleoperator, robot: Robot, fps: int = FPS, display_data: bool = False, duration: float | None = RECORD_DURATION
 ):
-<<<<<<< HEAD
     if mqtt_active:
         publish(client=system_state_publisher, topic=system_state_topic, data={"state" : "RECORDING"}, start_time=time.perf_counter())
-=======
-    
->>>>>>> adf53359eea59238d20bf765e4be9a9a6b0202b6
     start_time = time.perf_counter()
     progress = Progress(duration=duration, start=start_time, prev_remaining=None, event="recording")
 
