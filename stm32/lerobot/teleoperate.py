@@ -105,10 +105,14 @@ try:
         publisher.loop_start()
 
     mqtt_active = True
+    
 
-except Exception as e:
-    raise Exception("Error occured during mqtt initialization: ", e)
-    #mqtt_active = False
+except Exception:
+    mqtt_active = False
+
+finally:
+    print("mqtt_active = ", mqtt_active)
+
 
 
 def teleop_loop(
